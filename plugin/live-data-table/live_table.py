@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Live Data Table — Serial Studio Plugin
+Live Data Table
 
 Real-time tabular view of every dataset field with sparkline history,
 smart value formatting, min/max tracking, search filtering, freeze/resume,
@@ -204,7 +204,7 @@ class App:
         self.sort_rev = False
 
         self.root = tk.Tk()
-        self.root.title("Live Data Table — Serial Studio")
+        self.root.title("Live Data Table")
         self.root.geometry("920x580")
         self.root.minsize(700, 360)
         self.root.configure(bg=BG)
@@ -363,7 +363,7 @@ class App:
         else:
             self.status_lbl.config(text="● Connected", fg=ACCENT)
 
-        # Footer — only show fps when active
+        # Footer: only show fps when active
         self.lbl_fc.config(text=f"{fc:,} frames")
         if active:
             self.lbl_rate.config(text=f"{fps:.1f} fps  •  {dur:.0f}s")

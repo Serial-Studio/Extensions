@@ -25,10 +25,10 @@ On shutdown, the plugin generates a styled HTML report saved to your Serial Stud
 
 - Python 3.6+
 - Serial Studio API Server enabled (port 7777)
-- Tkinter (optional, for GUI — included with most Python installations)
+- Tkinter (optional, for GUI; included with most Python installations)
 
 ## Use Cases
 
-- **Post-session analysis** — Get min/max/mean/stdev for every channel after a test run
-- **Data validation** — Verify sensor outputs are within expected ranges
-- **Performance monitoring** — Track frame rates and data throughput
+- **Post-session analysis.** Get min/max/mean/stdev for every channel after a test run.
+- **Data validation.** Verify sensor outputs are within expected ranges.
+- **Performance monitoring.** Track frame rates and data throughput.

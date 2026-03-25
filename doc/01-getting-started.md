@@ -14,7 +14,7 @@ Extensions add functionality to Serial Studio without modifying the core applica
 ## Installing Extensions
 
 1. Open Serial Studio and click **Extensions** in the toolbar
-2. Browse the catalog — extensions are grouped by type
+2. Browse the catalog. Extensions are grouped by type
 3. Click a card to see details, then click **Install**
 4. Themes appear in Preferences, plugins can be launched from the detail view or the dashboard Start Menu
 

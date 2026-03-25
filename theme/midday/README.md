@@ -1,13 +1,13 @@
 # Midday
 
-Light theme with slate-blue toolbars and amber accents. Balanced warmth and cool tones — like sunlight through a workshop window.
+Light theme with slate-blue toolbars and amber accents. Balanced warmth and cool tones, like sunlight through a workshop window.
 
 ## Features
 
-- **Unique hybrid** — Light backgrounds with dark slate-blue `#485C76` toolbars for clear visual hierarchy
-- **Amber accents** — Warm `#E8A63A` highlights that guide the eye naturally
-- **Blue links** — `#2D6CCA` link color provides clear contrast against the warm accent
-- **Professional** — Designed for daytime use in professional environments
+- **Unique hybrid.** Light backgrounds with dark slate-blue `#485C76` toolbars for clear visual hierarchy.
+- **Amber accents.** Warm `#E8A63A` highlights that guide the eye naturally.
+- **Blue links.** `#2D6CCA` link color provides clear contrast against the warm accent.
+- **Professional.** Designed for daytime use in professional environments.
 
 ## Color Palette
 

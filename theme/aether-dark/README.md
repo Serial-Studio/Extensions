@@ -4,10 +4,10 @@ Deep space dark theme inspired by GitHub's color palette. Cool blue accents over
 
 ## Features
 
-- **GitHub-inspired** — Familiar dark palette drawn from GitHub's design system
-- **Cool blue accents** — Vibrant `#1f6feb` highlights and `#79c0ff` accent tones
-- **Green console** — Bright `#7ee787` terminal text for high readability against the dark base
-- **Full coverage** — Dashboard widgets, code editor, console, and all UI panels fully themed
+- **GitHub-inspired.** A familiar dark palette drawn from GitHub's design system.
+- **Cool blue accents.** Vibrant `#1f6feb` highlights and `#79c0ff` accent tones.
+- **Green console.** Bright `#7ee787` terminal text for high readability against the dark base.
+- **Full coverage.** Dashboard widgets, code editor, console, and all UI panels are fully themed.
 
 ## Color Palette
 

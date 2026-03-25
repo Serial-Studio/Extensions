@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Data Statistics Logger — Serial Studio Plugin
+Data Statistics Logger
 
 Computes running statistics (Welford's algorithm) for every numeric field:
 min, max, mean, standard deviation, sample count. Features Canvas-drawn
@@ -203,7 +203,7 @@ class App:
         self.frozen = False
 
         self.root = tk.Tk()
-        self.root.title("Data Statistics — Serial Studio")
+        self.root.title("Data Statistics")
         self.root.geometry("880x540")
         self.root.minsize(640, 340)
         self.root.configure(bg=BG)

@@ -1,13 +1,13 @@
 # Midnight
 
-Ultra-dark theme with muted indigo accents and green console text. Minimal contrast, minimal glare — built for late-night debugging marathons.
+Ultra-dark theme with muted indigo accents and green console text. Minimal contrast, minimal glare. Built for late-night debugging marathons.
 
 ## Features
 
-- **True dark** — `#181a1b` base is as dark as practical without being pure black
-- **Indigo accents** — Subdued `#4b6cb7` blue-violet highlights that don't assault tired eyes
-- **Green console** — `#98c379` terminal text is bright enough to read, soft enough to live with
-- **Low contrast** — `#b0b3b8` text on dark surfaces keeps everything legible without glare
+- **True dark.** The `#181a1b` base is as dark as practical without being pure black.
+- **Indigo accents.** Subdued `#4b6cb7` blue-violet highlights that won't assault tired eyes.
+- **Green console.** `#98c379` terminal text is bright enough to read, soft enough to live with.
+- **Low contrast.** `#b0b3b8` text on dark surfaces keeps everything legible without glare.
 
 ## Color Palette
 

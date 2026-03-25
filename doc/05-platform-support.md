@@ -76,7 +76,7 @@ For compiled plugins (Pro feature), provide separate binaries per platform:
 
 ## Notes
 
-- macOS always uses `darwin/*` — no need to separate arm64/x86_64 (universal builds)
+- macOS always uses `darwin/*` because builds are universal. No need to separate arm64/x86_64.
 - Linux may need separate arm64/x86_64 for native binaries
 - `runtime: ""` means the entry point is directly executable (native binary or shell script)
 - Native binaries get `chmod +x` automatically on Unix

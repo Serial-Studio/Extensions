@@ -1,13 +1,13 @@
 # Rust
 
-Warm, earthy dark theme with rich brown tones and gold accents. Aged leather and brass — for engineers who appreciate patina.
+Warm, earthy dark theme with rich brown tones and gold accents. Aged leather and brass, for engineers who appreciate patina.
 
 ## Features
 
-- **Warm dark base** — `#181411` backgrounds with brown undertones instead of cold gray or blue
-- **Gold accents** — `#E9C979` highlights feel natural against the warm palette
-- **Parchment text** — `#C7BCA9` body text has a warm cream cast rather than cool gray
-- **Cohesive warmth** — Every surface, from toolbars to widgets, carries the same earthy tone
+- **Warm dark base.** `#181411` backgrounds with brown undertones instead of cold gray or blue.
+- **Gold accents.** `#E9C979` highlights feel natural against the warm palette.
+- **Parchment text.** `#C7BCA9` body text has a warm cream cast rather than cool gray.
+- **Cohesive warmth.** Every surface, from toolbars to widgets, carries the same earthy tone.
 
 ## Color Palette
 
@@ -23,4 +23,4 @@ Warm, earthy dark theme with rich brown tones and gold accents. Aged leather and
 
 ## When to Use
 
-When every other dark theme feels too cold and clinical. Rust brings texture and warmth to the interface — like working at a well-worn workbench with brass fittings. Pairs especially well with hardware projects and vintage equipment.
+When every other dark theme feels too cold and clinical. Rust brings texture and warmth to the interface, like working at a well-worn workbench with brass fittings. Pairs especially well with hardware projects and vintage equipment.

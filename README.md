@@ -1,6 +1,6 @@
 # Serial Studio Extensions
 
-Community extensions repository for [Serial Studio](https://serial-studio.com) — themes, plugins, frame parsers, and project templates that extend the application without modifying its core.
+Extensions for [Serial Studio](https://serial-studio.com). Themes, plugins, frame parsers, and project templates that extend the application without modifying its core.
 
 ## Available Extensions
 
@@ -47,7 +47,7 @@ Community extensions repository for [Serial Studio](https://serial-studio.com) �
 ## Installation
 
 1. Open Serial Studio and click **Extensions** in the toolbar
-2. Browse the catalog — extensions are grouped by type
+2. Browse the catalog. Extensions are grouped by type
 3. Click a card to see details, then click **Install**
 
 Installed extensions auto-update when a newer version is detected in the repository.
@@ -57,10 +57,10 @@ Installed extensions auto-update when a newer version is detected in the reposit
 All plugins in this repository share a common set of capabilities:
 
 - **Auto-reconnect** to the Serial Studio API server
-- **State persistence** — plugin windows and settings are saved to the project file
-- **Auto-launch** — plugins that were running are relaunched on next startup
-- **Start Menu integration** — launch plugins from the dashboard Start Menu
-- **Cross-platform** — separate entry points for macOS, Linux, and Windows
+- **State persistence**: plugin windows and settings are saved to the project file
+- **Auto-launch**: plugins that were running are relaunched on next startup
+- **Start Menu integration**: launch plugins from the dashboard Start Menu
+- **Cross-platform**: separate entry points for macOS, Linux, and Windows
 
 ## Contributing
 
@@ -68,18 +68,18 @@ All plugins in this repository share a common set of capabilities:
 
 1. Clone this repository
 2. In Serial Studio, open **Extensions** > **Repos** > **Browse** and select the cloned folder
-3. Extensions appear immediately — install and test
+3. Extensions appear immediately, so you can install and test right away
 4. Make changes, reload, and iterate
 
 ### Creating Extensions
 
 See the [doc/](doc/) folder for detailed guides:
 
-1. [Getting Started](doc/01-getting-started.md) — extension types, info.json structure, local testing
-2. [Creating Themes](doc/02-creating-themes.md) — color palettes, code editor XML, design tips
-3. [Creating Plugins](doc/03-creating-plugins.md) — API connection, frame data, tkinter patterns
-4. [Plugin State Persistence](doc/04-plugin-state.md) — save/restore plugin state in project files
-5. [Platform Support](doc/05-platform-support.md) — platform keys, shell wrappers, native binaries
+1. [Getting Started](doc/01-getting-started.md): extension types, info.json structure, local testing
+2. [Creating Themes](doc/02-creating-themes.md): color palettes, code editor XML, design tips
+3. [Creating Plugins](doc/03-creating-plugins.md): API connection, frame data, tkinter patterns
+4. [Plugin State Persistence](doc/04-plugin-state.md): save/restore plugin state in project files
+5. [Platform Support](doc/05-platform-support.md): platform keys, shell wrappers, native binaries
 
 ### Repository Structure
 

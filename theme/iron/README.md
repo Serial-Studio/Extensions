@@ -1,13 +1,13 @@
 # Iron
 
-Bright, polished light theme with warm gold highlights on a clean white surface. Like a well-lit lab bench — sharp contrast, zero distractions.
+Bright, polished light theme with warm gold highlights on a clean white surface. Like a well-lit lab bench: sharp contrast, zero distractions.
 
 ## Features
 
-- **Light counterpart to Gunmetal** — Same gold accent family on a bright white base
-- **High contrast** — Near-black `#1A1A1A` text on pure white for maximum readability
-- **Warm highlights** — `#E9C979` gold accents add warmth without sacrificing professionalism
-- **Neutral chrome** — Light gray toolbars and panels stay out of the way
+- **Light counterpart to Gunmetal.** Same gold accent family on a bright white base.
+- **High contrast.** Near-black `#1A1A1A` text on pure white for maximum readability.
+- **Warm highlights.** `#E9C979` gold accents add warmth without sacrificing professionalism.
+- **Neutral chrome.** Light gray toolbars and panels stay out of the way.
 
 ## Color Palette
 

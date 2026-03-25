@@ -5,9 +5,9 @@ Type-Length-Value parser for binary serial protocols.
 ## Protocol Format
 
 Each TLV record consists of:
-- **Type** (1 byte) — Identifies the value type
-- **Length** (1 byte) — Number of value bytes
-- **Value** (N bytes) — The actual data
+- **Type** (1 byte): Identifies the value type.
+- **Length** (1 byte): Number of value bytes.
+- **Value** (N bytes): The actual data.
 
 ## Supported Types
 

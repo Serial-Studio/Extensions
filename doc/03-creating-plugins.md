@@ -206,12 +206,12 @@ python plugin.py %*
 
 ## macOS tkinter Rules
 
-These are critical — violating them causes invisible widgets or white artifacts:
+These rules are critical. Violating them causes invisible widgets or white artifacts:
 
-1. **Use `ttk.Treeview` for tables** — never `tk.Canvas` with embedded Frames
-2. **Hide scrollbars on macOS** — `if sys.platform != "darwin": vsb.pack(...)`
-3. **Use `tk.Label` for buttons** — `tk.Button` ignores styling on macOS
-4. **Avoid `ttk.Combobox`** in dark themes — dropdown is always white
+1. **Use `ttk.Treeview` for tables.** Never use `tk.Canvas` with embedded Frames.
+2. **Hide scrollbars on macOS.** Use `if sys.platform != "darwin": vsb.pack(...)`.
+3. **Use `tk.Label` for buttons.** `tk.Button` ignores styling on macOS.
+4. **Avoid `ttk.Combobox`** in dark themes. The dropdown is always white.
 
 See [CLAUDE.md](../CLAUDE.md) for detailed patterns and code examples.
 

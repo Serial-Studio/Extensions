@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Protocol Analyzer — Serial Studio Plugin
+Protocol Analyzer
 
 Captures parsed frames with hex dumps, decoded field tables, inter-frame
 timing, throughput stats, and a frame-rate graph. Features auto-scroll
@@ -311,7 +311,7 @@ class App:
         self.prev_count = 0
 
         self.root = tk.Tk()
-        self.root.title("Protocol Analyzer — Serial Studio")
+        self.root.title("Protocol Analyzer")
         self.root.geometry("960x680")
         self.root.minsize(720, 450)
         self.root.configure(bg=BG)

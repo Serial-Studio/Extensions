@@ -1,6 +1,6 @@
 # Plugin State Persistence
 
-Plugin state is saved in the project file (`.ssproj`) alongside widget layout data. This means different projects can have different plugin configurations — the same plugin shows different gauges or indicators depending on which project is loaded.
+Plugin state is saved in the project file (`.ssproj`) alongside widget layout data. This means different projects can have different plugin configurations. The same plugin shows different gauges or indicators depending on which project is loaded.
 
 ## How It Works
 
@@ -129,11 +129,11 @@ def main():
 
 Plugins that were running when Serial Studio closed are automatically relaunched on the next startup. The ExtensionManager saves the list of running plugin IDs to QSettings and restores them after the extension catalog loads.
 
-No plugin-side code is needed for this — it's handled by the ExtensionManager.
+No plugin-side code is needed for this. It's handled entirely by the ExtensionManager.
 
 ## Important Notes
 
 - State is only saved when a project file is loaded (`operationMode == ProjectFile`)
 - The `_restore_state` must wait for data fields to arrive before creating windows (use `root.after(500, try_restore)` retry pattern)
-- Never hold the data lock while creating tkinter widgets — causes deadlocks
+- Never hold the data lock while creating tkinter widgets. This causes deadlocks.
 - State objects should be JSON-serializable (dicts, lists, strings, numbers, bools)

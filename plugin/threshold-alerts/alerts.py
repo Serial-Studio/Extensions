@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Threshold Alerts — Serial Studio Plugin
+Threshold Alerts
 
 Real-time field monitor with per-field high/low thresholds. Breaches trigger
 color-coded row highlighting, a timestamped event log, and a system bell.
@@ -185,7 +185,7 @@ class App:
         self.prev_log_len = 0
 
         self.root = tk.Tk()
-        self.root.title("Threshold Alerts — Serial Studio")
+        self.root.title("Threshold Alerts")
         self.root.geometry("820x640")
         self.root.minsize(620, 420)
         self.root.configure(bg=BG)
@@ -389,8 +389,8 @@ class App:
                 count = self.store.alert_counts.get(key, 0)
                 total_alerts += count
 
-                lo_s = f"{lo:.2f}" if lo != -INF else "—"
-                hi_s = f"{hi:.2f}" if hi != INF else "—"
+                lo_s = f"{lo:.2f}" if lo != -INF else "-"
+                hi_s = f"{hi:.2f}" if hi != INF else "-"
 
                 if lo != -INF and val < lo:
                     status, tag = "LOW", "alert"

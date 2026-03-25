@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Custom Gauge Panel — Serial Studio Plugin
+Custom Gauge Panel
 
 Multi-needle analog gauge with Canvas-drawn dials. Add multiple datasets
 to a single gauge to compare channels. Configurable min/max range, color
@@ -84,7 +84,7 @@ class APIClient:
         self._send("extensions.saveState", {"pluginId": plugin_id, "state": state})
 
     def load_state_async(self, plugin_id):
-        """Send loadState request — response handled in run_loop via on_state_loaded."""
+        """Send loadState request. Response handled in run_loop via on_state_loaded."""
         self._pending_state_id = self.req_id + 1
         self._send("extensions.loadState", {"pluginId": plugin_id})
 
@@ -189,7 +189,7 @@ class DataStore:
                             pmin, pmax = 0, 0
 
                         # Prefer plot range (explicitly set by user), then widget
-                        # range — but skip the default widget range (0, 100)
+                        # range, but skip the default widget range (0, 100)
                         # which is just Qt's struct default, not user-configured
                         is_default_wgt = (wmin == 0 and wmax == 100)
                         if pmin != pmax:
@@ -272,7 +272,7 @@ def draw_dial(canvas, cx, cy, radius, sweep_deg, min_val, max_val, zones=None):
 
 
 def draw_needles(canvas, cx, cy, radius, sweep_deg, needles, min_val, max_val):
-    """Draw needles and readouts. Called every tick (fast — no ticks/labels)."""
+    """Draw needles and readouts. Called every tick (fast, no ticks/labels)."""
     canvas.delete("needle")
 
     if sweep_deg >= 270:
@@ -588,7 +588,7 @@ class GaugeWindow:
             self._last_size = cur_size
             self._dial_dirty = False
 
-        # Redraw needles every tick (fast — only lines + text)
+        # Redraw needles every tick (fast, only lines + text)
         draw_needles(self.canvas, cx, cy, radius, self.sweep,
                      needles, self.min_val, self.max_val)
 
@@ -602,7 +602,7 @@ class MasterApp:
         self.gauges = []
 
         self.root = tk.Tk()
-        self.root.title("Custom Gauge Panel — Serial Studio")
+        self.root.title("Custom Gauge Panel")
         self.root.geometry("500x480")
         self.root.minsize(380, 320)
         self.root.configure(bg=BG)

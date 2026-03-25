@@ -4,10 +4,10 @@ Clean, bright workspace inspired by GitHub's light mode. Crisp whites and subtle
 
 ## Features
 
-- **GitHub-inspired** — Light counterpart to Aether Dark, mirroring GitHub's clean aesthetic
-- **High contrast** — Dark `#24292f` text on pure white surfaces for maximum legibility
-- **Blue accents** — `#0969da` highlights and links for clear interactive cues
-- **Full coverage** — All widgets, toolbars, tables, and code editor fully themed
+- **GitHub-inspired.** The light counterpart to Aether Dark, mirroring GitHub's clean aesthetic.
+- **High contrast.** Dark `#24292f` text on pure white surfaces for maximum legibility.
+- **Blue accents.** `#0969da` highlights and links for clear interactive cues.
+- **Full coverage.** All widgets, toolbars, tables, and code editor are fully themed.
 
 ## Color Palette
 

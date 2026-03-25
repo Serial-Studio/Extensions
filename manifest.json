@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repository": "Serial Studio Community Extensions",
+  "repository": "Serial Studio Extensions",
   "extensions": [
     "theme/solarized-dark/info.json",
     "theme/solarized-light/info.json",

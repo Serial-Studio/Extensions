@@ -1,13 +1,13 @@
 # Gunmetal
 
-Charcoal-dark industrial theme with warm gold accents. Inspired by brushed metal instrument panels — serious, focused, and easy on the eyes.
+Charcoal-dark industrial theme with warm gold accents. Inspired by brushed metal instrument panels, it feels serious, focused, and easy on the eyes.
 
 ## Features
 
-- **Industrial aesthetic** — Neutral charcoal tones that evoke precision equipment
-- **Gold accents** — Warm `#E9C979` highlights that stand out without overwhelming
-- **Gold console** — Console text matches the accent for a unified look
-- **Low fatigue** — Muted `#C0C3C7` body text on near-black surfaces reduces eye strain
+- **Industrial aesthetic.** Neutral charcoal tones that evoke precision equipment.
+- **Gold accents.** Warm `#E9C979` highlights that stand out without overwhelming.
+- **Gold console.** Console text matches the accent for a unified look.
+- **Low fatigue.** Muted `#C0C3C7` body text on near-black surfaces reduces eye strain.
 
 ## Color Palette
 
@@ -23,4 +23,4 @@ Charcoal-dark industrial theme with warm gold accents. Inspired by brushed metal
 
 ## When to Use
 
-When you want a dark theme that feels industrial rather than techy. The gold-on-charcoal palette gives the UI weight and presence — like a physical instrument you'd trust in a test lab.
+When you want a dark theme that feels industrial rather than techy. The gold-on-charcoal palette gives the UI weight and presence, like a physical instrument you'd trust in a test lab.

@@ -1,13 +1,13 @@
 # Classic
 
-The original Serial Studio look. Deep teal panels with mint-green console text and cyan accents — a retro terminal feel for the modern engineer.
+The original Serial Studio look. Deep teal panels with mint-green console text and cyan accents. A retro terminal feel for the modern engineer.
 
 ## Features
 
-- **The original** — This was Serial Studio's first theme, preserved as an extension
-- **Teal & cyan** — Distinctive `#409DA0` accent color with deep teal `#0E161C` backgrounds
-- **Green terminal** — `#8ECD9D` console text recalls classic phosphor monitors
-- **Warm contrast** — Light cream text `#E8ECF0` against oceanic blues for comfortable viewing
+- **The original.** This was Serial Studio's first theme, preserved as an extension.
+- **Teal & cyan.** Distinctive `#409DA0` accent color with deep teal `#0E161C` backgrounds.
+- **Green terminal.** `#8ECD9D` console text recalls classic phosphor monitors.
+- **Warm contrast.** Light cream text `#E8ECF0` against oceanic blues for comfortable viewing.
 
 ## Color Palette
 

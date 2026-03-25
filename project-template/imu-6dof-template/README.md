@@ -15,9 +15,9 @@ $accelX,accelY,accelZ,gyroX,gyroY,gyroZ;
 
 ## Dashboard Widgets
 
-- **Accelerometer group** — 3D accelerometer widget with per-axis plots and FFT analysis (256 samples, 100 Hz)
-- **Gyroscope group** — 3D gyroscope widget with per-axis plots
-- **IMU Overview** — Data grid showing all 6 channels in a table
+- **Accelerometer group.** 3D accelerometer widget with per-axis plots and FFT analysis (256 samples, 100 Hz).
+- **Gyroscope group.** 3D gyroscope widget with per-axis plots.
+- **IMU Overview.** Data grid showing all 6 channels in a table.
 
 ## Configuration
 

@@ -1,13 +1,13 @@
 # Solarized Light
 
-Ethan Schoonover's iconic Solarized palette in its light variant. Warm cream backgrounds with precisely calibrated contrast — the same careful balance as Solarized Dark, now for bright environments.
+Ethan Schoonover's iconic Solarized palette in its light variant. Warm cream backgrounds with precisely calibrated contrast, bringing the same careful balance as Solarized Dark to bright environments.
 
 ## Features
 
-- **Precision contrast** — Solarized's mathematically-derived contrast ratios on a warm cream base
-- **Complete coverage** — All UI elements, dashboard widgets, console, and code editor fully themed
-- **Code editor support** — Syntax highlighting uses the canonical Solarized palette (green keywords, blue types, cyan strings)
-- **Eye comfort** — The warm `#FDF6E3` background avoids the harshness of pure white
+- **Precision contrast.** Solarized's mathematically-derived contrast ratios on a warm cream base.
+- **Complete coverage.** All UI elements, dashboard widgets, console, and code editor are fully themed.
+- **Code editor support.** Syntax highlighting uses the canonical Solarized palette (green keywords, blue types, cyan strings).
+- **Eye comfort.** The warm `#FDF6E3` background avoids the harshness of pure white.
 
 ## Color Palette
 
@@ -27,4 +27,4 @@ For well-lit environments where a dark theme would look washed out. The warm cre
 
 ## Credits
 
-Based on [Ethan Schoonover's Solarized](https://ethanschoenover.com/solarized/) color scheme (MIT licensed).
+Based on [Ethan Schoonover's Solarized](https://ethanschoonover.com/solarized/) color scheme (MIT licensed).

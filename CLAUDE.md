@@ -1,8 +1,8 @@
-# CLAUDE.md — Serial Studio Extensions Repository
+# CLAUDE.md - Serial Studio Extensions Repository
 
 ## Purpose
 
-Community extensions for Serial Studio: themes, frame parsers, project templates, and plugins.
+Extensions for Serial Studio: themes, frame parsers, project templates, and plugins.
 
 ## Repository Structure
 
@@ -28,7 +28,7 @@ plugin/<id>/README.md                   ← plugin description
 
 - Extension IDs: lowercase-hyphenated (e.g., `solarized-dark`, `digital-indicator`)
 - Each extension is self-contained in its own directory
-- info.json carries all metadata — manifest.json only references paths
+- info.json carries all metadata. manifest.json only references paths.
 - File paths in info.json are relative to the info.json location
 - All versions are `0.0.1` during development
 - Themes must include a color palette JSON, code-editor XML, and README.md
@@ -81,7 +81,7 @@ The API server broadcasts lifecycle events so plugins can save/restore state:
 
 ### Plugin State Persistence
 
-Plugin state is saved in the project file's `widgetSettings` under `__plugin__:<pluginId>` keys. This ties plugin configuration to the project — different projects can have different plugin setups.
+Plugin state is saved in the project file's `widgetSettings` under `__plugin__:<pluginId>` keys. This ties plugin configuration to the project, so different projects can have different plugin setups.
 
 **Save state:**
 ```python
@@ -122,7 +122,7 @@ class App:             # tkinter GUI with periodic _tick() updates
 
 - `APIClient.on_frame` callback → `DataStore.ingest(frame_data)`
 - `App._tick()` reads from `DataStore` under lock, updates GUI, schedules next tick
-- **Never create GUI widgets while holding the data lock** — causes deadlocks
+- **Never create GUI widgets while holding the data lock.** This causes deadlocks.
 
 ### Activity Detection
 
@@ -153,7 +153,7 @@ def duration(self):
 
 These are hard-won lessons from macOS tkinter behavior. Violating them causes invisible widgets, white artifacts, or crashes.
 
-### Use ttk.Treeview for data tables — NEVER tk.Canvas with embedded Frames
+### Use ttk.Treeview for data tables, NEVER tk.Canvas with embedded Frames
 
 The `tk.Canvas` + `create_window()` + `tk.Frame` row pattern **does not work on macOS**. Rows are invisible. The only reliable approach for dark-themed scrollable tables is `ttk.Treeview` with custom styling:
 
@@ -178,7 +178,7 @@ Use unique style names per plugin (e.g., `"LT.Treeview"`, `"ST.Treeview"`) to av
 
 ### Hide scrollbars on macOS
 
-macOS ignores `tk.Scrollbar` color styling — scrollbars are always white. Hide them on macOS; users scroll with trackpad gestures:
+macOS ignores `tk.Scrollbar` color styling, so scrollbars are always white. Hide them on macOS. Users scroll with trackpad gestures:
 
 ```python
 tree.pack(side="left", fill="both", expand=True)
@@ -190,7 +190,7 @@ if sys.platform != "darwin":
     vsb.pack(side="right", fill="y")
 ```
 
-### Use tk.Label for buttons — NEVER tk.Button
+### Use tk.Label for buttons, NEVER tk.Button
 
 macOS ignores `tk.Button` background/foreground styling. Buttons always render with white system chrome. Use `tk.Label` with click/hover bindings instead:
 
@@ -216,7 +216,7 @@ def _cycle_option(self):
 
 - All data writes happen in the background `run_loop` thread
 - All GUI updates happen in the main thread via `root.after(ms, callback)`
-- **Never hold the data lock while creating tkinter widgets** — the widget constructor may trigger tkinter callbacks that try to acquire the same lock → deadlock
+- **Never hold the data lock while creating tkinter widgets.** The widget constructor may trigger tkinter callbacks that try to acquire the same lock, leading to a deadlock.
 - Pattern: find data under lock, release lock, then create widgets:
   ```python
   found = None
@@ -276,7 +276,7 @@ python plugin.py %*
 - macOS: always `darwin/*` (universal builds)
 - Linux: `linux/x86_64`, `linux/arm64`, or `linux/*`
 - `runtime: ""` means the entry is a native executable / shell script
-- Fallback order: exact `os/arch` → `os/*` → `*` → top-level fields
+- Fallback order: exact `os/arch`, then `os/*`, then `*`, then top-level fields
 
 ### Plugin icons
 
@@ -289,10 +289,10 @@ Plugins should include an `icon.svg` for display in the start menu and toolbar. 
 
 ### Required files
 
-- `<id>.json` — full color palette (see any built-in theme for key list)
-- `code-editor/<id>.xml` — syntax highlighting for the JavaScript editor
-- `info.json` — metadata with `"type": "theme"`
-- `README.md` — description with color table
+- `<id>.json`: full color palette (see any built-in theme for key list)
+- `code-editor/<id>.xml`: syntax highlighting for the JavaScript editor
+- `info.json`: metadata with `"type": "theme"`
+- `README.md`: description with color table
 
 ### Theme JSON structure
 
@@ -317,17 +317,17 @@ Plugins should include an `icon.svg` for display in the start menu and toolbar. 
 Full palette requires ~80 color keys plus `widget_colors` (20 colors) and `device_colors` (10 gradient pairs). Reference: `app/rcc/themes/default.json` in the Serial Studio repo.
 
 Key groups:
-- `groupbox_*` — panel borders and backgrounds
-- `pane_*` — content area and section headers
-- `toolbar_*` — main toolbar gradient and buttons
-- `console_*` — terminal/console widget
-- `widget_*` — dashboard widget controls
-- `window_*` — window chrome and title bars
-- `taskbar_*` — dashboard taskbar
-- `start_menu_*` — dashboard start menu
-- `table_*` — data grid tables
-- `plot3d_*` — 3D visualization
-- `polar_*` — polar/compass widgets
+- `groupbox_*`: panel borders and backgrounds
+- `pane_*`: content area and section headers
+- `toolbar_*`: main toolbar gradient and buttons
+- `console_*`: terminal/console widget
+- `widget_*`: dashboard widget controls
+- `window_*`: window chrome and title bars
+- `taskbar_*`: dashboard taskbar
+- `start_menu_*`: dashboard start menu
+- `table_*`: data grid tables
+- `plot3d_*`: 3D visualization
+- `polar_*`: polar/compass widgets
 
 ### Dark theme tips
 
@@ -346,14 +346,14 @@ Key groups:
 
 1. Clone this repo next to the Serial Studio repo
 2. In Serial Studio Pro, open Extensions → Repos → Browse → select this folder
-3. Extensions appear immediately — install and test
-4. For GPL builds, the default community repo is used (repo settings are Pro-only)
+3. Extensions appear immediately, so you can install and test right away
+4. For GPL builds, the default extension repo is used (repo settings are Pro-only)
 5. Extensions auto-update when a newer version is detected in the repository
 
 ## Seven-Segment Display Notes (Digital Indicator)
 
-- Decimal points are zero-width — drawn as circles in the gap between digits, not as separate columns
-- Never use scientific notation (e.g., `1.0e-03`) — real panel meters don't. Use fixed decimal with auto-selected precision.
+- Decimal points are zero-width. They are drawn as circles in the gap between digits, not as separate columns.
+- Never use scientific notation (e.g., `1.0e-03`). Real panel meters don't. Use fixed decimal with auto-selected precision.
 - `format_7seg()` must guarantee exactly `width` non-dot characters
 - Character set: `0-9`, `-`, ` `, `.`, `E`/`e`, `F`, `r`, `o`, `L`, `H`, `d`, `P`, `n`, `t`
 - Canvas `create_rectangle` for segments, `create_oval` for decimal points

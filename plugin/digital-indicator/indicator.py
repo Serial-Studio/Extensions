@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Digital Indicator Panel — Serial Studio Plugin
+Digital Indicator Panel
 
 Professional seven-segment display panel for real-time dataset monitoring.
 Inspired by industrial panel meters (Omega, Laurel, Red Lion).
@@ -99,8 +99,8 @@ def _v_seg(canvas, x_mid, y1, y2, sw, fill):
 def draw_segments(canvas, x, y, w, h, chars, color_on, color_off, spacing=10):
     """Draw seven-segment characters on a Canvas.
 
-    Each segment is a tapered hexagonal polygon — wider in the middle,
-    pointed at the ends — matching real LED/LCD panel displays.
+    Each segment is a tapered hexagonal polygon, wider in the middle,
+    pointed at the ends, matching real LED/LCD panel displays.
     Decimal points are zero-width (drawn in the gap between digits).
     """
     canvas.delete("seg")
@@ -176,7 +176,7 @@ def format_7seg(value, width=8, decimals=None):
 
     Returns a string where non-dot characters == width exactly.
     Dots are zero-width (drawn attached to the preceding digit).
-    No scientific notation — real panel meters don't use it.
+    No scientific notation. Real panel meters don't use it.
     """
     if value is None or math.isnan(value):
         return (" " * (width - 3) + "---")[:width]
@@ -209,7 +209,7 @@ def format_7seg(value, width=8, decimals=None):
         elif text.endswith("."):
             text = text[:-1]
         else:
-            # Integer overflow — show "oFL"
+            # Integer overflow, show "oFL"
             text = "-oFL" if value < 0 else " oFL"
             break
 
@@ -308,7 +308,7 @@ class APIClient:
         self._send("extensions.saveState", {"pluginId": plugin_id, "state": state})
 
     def load_state_async(self, plugin_id):
-        """Send loadState request — response handled in run_loop via on_state_loaded."""
+        """Send loadState request. Response handled in run_loop via on_state_loaded."""
         self._pending_state_id = self.req_id + 1
         self._send("extensions.loadState", {"pluginId": plugin_id})
 
@@ -386,7 +386,7 @@ class IndicatorWindow:
         total_w = max(disp_w + 24, 420)
 
         self.win = tk.Toplevel(master)
-        self.win.title(f"{title} — Digital Indicator")
+        self.win.title(title)
         self.win.geometry(f"{total_w}x310")
         self.win.configure(bg=self.colors["bg"])
         self.win.resizable(False, False)
@@ -422,13 +422,13 @@ class IndicatorWindow:
         stats_frame.pack(fill="x", padx=12, pady=(2, 4))
 
         self.min_lbl = tk.Label(
-            stats_frame, text="MIN: —", bg=self.colors["bg"],
+            stats_frame, text="MIN: -", bg=self.colors["bg"],
             fg=DIM, font=("Menlo", 9), anchor="w",
         )
         self.min_lbl.pack(side="left")
 
         self.max_lbl = tk.Label(
-            stats_frame, text="MAX: —", bg=self.colors["bg"],
+            stats_frame, text="MAX: -", bg=self.colors["bg"],
             fg=DIM, font=("Menlo", 9), anchor="e",
         )
         self.max_lbl.pack(side="right")
@@ -606,8 +606,8 @@ class IndicatorWindow:
             self.min_lbl.config(text=f"MIN: {self.peak_min:.4f}")
             self.max_lbl.config(text=f"MAX: {self.peak_max:.4f}")
         else:
-            self.min_lbl.config(text="MIN: —")
-            self.max_lbl.config(text="MAX: —")
+            self.min_lbl.config(text="MIN: -")
+            self.max_lbl.config(text="MAX: -")
 
         if self.peak_mode:
             self.peak_lbl.config(text="PEAK", fg=self.colors["digit"])
@@ -637,7 +637,7 @@ class MasterApp:
         self.indicators = []
 
         self.root = tk.Tk()
-        self.root.title("Digital Indicator Panel — Serial Studio")
+        self.root.title("Digital Indicator Panel")
         self.root.geometry("480x500")
         self.root.minsize(380, 320)
         self.root.configure(bg=BG)
