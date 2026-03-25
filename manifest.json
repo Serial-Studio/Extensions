@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "repository": "Serial Studio Community Extensions",
+  "extensions": [
+    "theme/solarized-dark/info.json",
+    "theme/solarized-light/info.json",
+    "theme/aether-dark/info.json",
+    "theme/aether-light/info.json",
+    "theme/classic/info.json",
+    "theme/gunmetal/info.json",
+    "theme/iron/info.json",
+    "theme/midday/info.json",
+    "theme/midnight/info.json",
+    "theme/rust/info.json",
+    "frame-parser/binary-tlv-parser/info.json",
+    "frame-parser/nmea-gps-parser/info.json",
+    "project-template/imu-6dof-template/info.json",
+    "project-template/pid-controller-template/info.json",
+    "plugin/data-stats-logger/info.json",
+    "plugin/live-data-table/info.json",
+    "plugin/threshold-alerts/info.json",
+    "plugin/protocol-analyzer/info.json",
+    "plugin/digital-indicator/info.json",
+    "plugin/custom-gauge/info.json"
+  ]
+}

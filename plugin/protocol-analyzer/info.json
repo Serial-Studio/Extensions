@@ -1,0 +1,42 @@
+{
+  "id": "protocol-analyzer",
+  "type": "plugin",
+  "title": "Protocol Analyzer",
+  "description": "Frame capture with hex dumps, decoded field tables, live frame-rate graph, inter-frame timing, auto-scroll toggle, copy-to-clipboard, and auto-reconnect.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Debugging",
+  "entry": "analyzer.py",
+  "runtime": "python3",
+  "terminal": false,
+  "files": [
+    "info.json",
+    "analyzer.py",
+    "icon.svg"
+  ],
+  "platforms": {
+    "darwin/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "linux/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "windows/*": {
+      "entry": "run.cmd",
+      "runtime": "",
+      "files": [
+        "run.cmd"
+      ]
+    }
+  },
+  "icon": "icon.svg"
+}

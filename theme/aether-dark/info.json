@@ -1,0 +1,15 @@
+{
+  "id": "aether-dark",
+  "type": "theme",
+  "title": "Aether Dark",
+  "description": "Deep space dark theme inspired by GitHub's color palette. Cool blue accents over an ink-black canvas with soft gray text for long coding sessions.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "files": [
+    "info.json",
+    "aether-dark.json",
+    "code-editor/aether-dark.xml"
+  ]
+}

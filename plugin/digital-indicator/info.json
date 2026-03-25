@@ -1,0 +1,42 @@
+{
+  "id": "digital-indicator",
+  "type": "plugin",
+  "title": "Digital Indicator Panel",
+  "description": "Industrial seven-segment display panel with hold, tare, peak tracking, color themes, and multi-window support. Like an Omega strain gauge indicator for your data.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Visualization",
+  "icon": "icon.svg",
+  "entry": "indicator.py",
+  "runtime": "python3",
+  "terminal": false,
+  "files": [
+    "info.json",
+    "indicator.py",
+    "icon.svg"
+  ],
+  "platforms": {
+    "darwin/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "linux/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "windows/*": {
+      "entry": "run.cmd",
+      "runtime": "",
+      "files": [
+        "run.cmd"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "gunmetal",
+  "type": "theme",
+  "title": "Gunmetal",
+  "description": "Charcoal-dark industrial theme with warm gold accents. Inspired by brushed metal instrument panels \u2014 serious, focused, and easy on the eyes.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "files": [
+    "info.json",
+    "gunmetal.json",
+    "code-editor/gunmetal.xml"
+  ]
+}

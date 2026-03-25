@@ -1,0 +1,13 @@
+{
+  "id": "nmea-gps-parser",
+  "type": "frame-parser",
+  "title": "NMEA GPS Sentence Parser",
+  "description": "Parses standard NMEA 0183 GGA and RMC sentences into latitude, longitude, altitude, speed, course, satellites, and fix quality.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Protocol",
+  "files": [
+    "nmea-gps-parser.js"
+  ]
+}

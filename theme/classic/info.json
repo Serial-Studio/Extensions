@@ -1,0 +1,15 @@
+{
+  "id": "classic",
+  "type": "theme",
+  "title": "Classic",
+  "description": "The original Serial Studio look. Deep teal panels with mint-green console text and cyan accents \u2014 a retro terminal feel for the modern engineer.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "files": [
+    "info.json",
+    "classic.json",
+    "code-editor/classic.xml"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "midday",
+  "type": "theme",
+  "title": "Midday",
+  "description": "Light theme with slate-blue toolbars and amber accents. Balanced warmth and cool tones \u2014 like sunlight through a workshop window.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Light",
+  "files": [
+    "info.json",
+    "midday.json",
+    "code-editor/midday.xml"
+  ]
+}

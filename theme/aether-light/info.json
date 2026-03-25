@@ -1,0 +1,15 @@
+{
+  "id": "aether-light",
+  "type": "theme",
+  "title": "Aether Light",
+  "description": "Clean, bright workspace inspired by GitHub's light mode. Crisp whites and subtle grays with bold blue accents for maximum clarity in daylight.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Light",
+  "files": [
+    "info.json",
+    "aether-light.json",
+    "code-editor/aether-light.xml"
+  ]
+}

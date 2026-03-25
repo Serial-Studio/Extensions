@@ -1,0 +1,42 @@
+{
+  "id": "threshold-alerts",
+  "type": "plugin",
+  "title": "Threshold Alerts",
+  "description": "Per-field high/low threshold monitoring with persistent settings, color-coded status, timestamped event log, system bell alerts, and auto-reconnect.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Monitoring",
+  "entry": "alerts.py",
+  "runtime": "python3",
+  "terminal": false,
+  "files": [
+    "info.json",
+    "alerts.py",
+    "icon.svg"
+  ],
+  "platforms": {
+    "darwin/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "linux/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "windows/*": {
+      "entry": "run.cmd",
+      "runtime": "",
+      "files": [
+        "run.cmd"
+      ]
+    }
+  },
+  "icon": "icon.svg"
+}

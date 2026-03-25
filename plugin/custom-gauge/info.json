@@ -1,0 +1,42 @@
+{
+  "id": "custom-gauge",
+  "type": "plugin",
+  "title": "Custom Gauge Panel",
+  "description": "Multi-needle analog gauge with Canvas-drawn dials, auto-ranging, color zones, 3 sweep styles (270/180/90\u00b0), and dynamic dataset overlay.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Visualization",
+  "icon": "icon.svg",
+  "entry": "gauge.py",
+  "runtime": "python3",
+  "terminal": false,
+  "files": [
+    "info.json",
+    "gauge.py",
+    "icon.svg"
+  ],
+  "platforms": {
+    "darwin/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "linux/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "windows/*": {
+      "entry": "run.cmd",
+      "runtime": "",
+      "files": [
+        "run.cmd"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "solarized-light",
+  "type": "theme",
+  "title": "Solarized Light",
+  "description": "Ethan Schoonover's iconic Solarized palette in its light variant. Warm cream backgrounds with precisely calibrated contrast \u2014 the same careful balance, now for bright environments.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Light",
+  "files": [
+    "info.json",
+    "solarized-light.json",
+    "code-editor/solarized-light.xml"
+  ]
+}

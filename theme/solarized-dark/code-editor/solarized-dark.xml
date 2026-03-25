@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<style-scheme version="1.0" name="Solarized Dark">
+  <style name="Text" foreground="#839496" background="#002b36"/>
+  <style name="Selection" background="#268bd2" foreground="#fdf6e3"/>
+  <style name="LineNumber" foreground="#657b83" background="#002b36"/>
+  <style name="CurrentLine" background="#073642"/>
+  <style name="CurrentLineNumber" foreground="#b58900" bold="true"/>
+  <style name="Occurrences" background="#073642"/>
+  <style name="SearchResult" background="#094452" foreground="#eee8d5"/>
+
+  <style name="Keyword" foreground="#859900" bold="true"/>
+  <style name="Type" foreground="#268bd2"/>
+  <style name="Function" foreground="#b58900"/>
+  <style name="Macro" foreground="#cb4b16"/>
+  <style name="String" foreground="#2aa198"/>
+  <style name="Number" foreground="#d33682"/>
+  <style name="Comment" foreground="#657b83" italic="true"/>
+  <style name="Label" foreground="#dc322f"/>
+  <style name="Operator" foreground="#93a1a1"/>
+  <style name="Punctuation" foreground="#839496"/>
+  <style name="Preprocessor" foreground="#cb4b16" italic="true"/>
+
+  <style name="Parentheses" background="#268bd2" foreground="#002b36"/>
+  <style name="ParenthesesMismatch" background="#dc322f" foreground="#fdf6e3"/>
+
+  <style name="Warning" underlineColor="#b58900" underlineStyle="SingleUnderline"/>
+  <style name="Error" underlineColor="#dc322f" underlineStyle="SingleUnderline"/>
+  <style name="DisabledCode" foreground="#586e75" italic="true"/>
+
+  <style name="AddedLine" foreground="#859900"/>
+  <style name="RemovedLine" foreground="#dc322f"/>
+  <style name="DiffContextLine" background="#073642"/>
+  <style name="DiffSourceLine" background="#002b36"/>
+  <style name="DiffDestLine" background="#094452"/>
+</style-scheme>

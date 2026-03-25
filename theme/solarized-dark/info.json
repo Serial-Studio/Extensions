@@ -1,0 +1,15 @@
+{
+  "id": "solarized-dark",
+  "type": "theme",
+  "title": "Solarized Dark",
+  "description": "Ethan Schoonover's iconic Solarized palette adapted for Serial Studio. Precisely calibrated contrast with teal and blue accents on a deep ocean base.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "files": [
+    "info.json",
+    "solarized-dark.json",
+    "code-editor/solarized-dark.xml"
+  ]
+}

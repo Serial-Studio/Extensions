@@ -1,0 +1,15 @@
+{
+  "id": "rust",
+  "type": "theme",
+  "title": "Rust",
+  "description": "Warm, earthy dark theme with rich brown tones and gold accents. Aged leather and brass \u2014 for engineers who appreciate patina.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "files": [
+    "info.json",
+    "rust.json",
+    "code-editor/rust.xml"
+  ]
+}

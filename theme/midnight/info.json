@@ -1,0 +1,15 @@
+{
+  "id": "midnight",
+  "type": "theme",
+  "title": "Midnight",
+  "description": "Ultra-dark theme with muted indigo accents and green console text. Minimal contrast, minimal glare \u2014 built for late-night debugging marathons.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "files": [
+    "info.json",
+    "midnight.json",
+    "code-editor/midnight.xml"
+  ]
+}

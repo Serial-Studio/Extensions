@@ -1,0 +1,15 @@
+{
+  "id": "iron",
+  "type": "theme",
+  "title": "Iron",
+  "description": "Bright, polished light theme with warm gold highlights on a clean white surface. Like a well-lit lab bench \u2014 sharp contrast, zero distractions.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Light",
+  "files": [
+    "info.json",
+    "iron.json",
+    "code-editor/iron.xml"
+  ]
+}

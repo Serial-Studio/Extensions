@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Editors
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini

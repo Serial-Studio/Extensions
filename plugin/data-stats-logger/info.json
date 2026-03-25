@@ -1,0 +1,42 @@
+{
+  "id": "data-stats-logger",
+  "type": "plugin",
+  "title": "Data Statistics Logger",
+  "description": "Running statistics (Welford's algorithm) with range-bar visualization, freeze/resume, auto-reconnect, and styled HTML report export on exit.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Analysis",
+  "entry": "stats_logger.py",
+  "runtime": "python3",
+  "terminal": false,
+  "files": [
+    "info.json",
+    "stats_logger.py",
+    "icon.svg"
+  ],
+  "platforms": {
+    "darwin/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "linux/*": {
+      "entry": "run.sh",
+      "runtime": "",
+      "files": [
+        "run.sh"
+      ]
+    },
+    "windows/*": {
+      "entry": "run.cmd",
+      "runtime": "",
+      "files": [
+        "run.cmd"
+      ]
+    }
+  },
+  "icon": "icon.svg"
+}

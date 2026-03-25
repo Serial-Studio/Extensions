@@ -1,0 +1,13 @@
+{
+  "id": "pid-controller-template",
+  "type": "project-template",
+  "title": "PID Controller Monitor",
+  "description": "Dashboard for monitoring PID control loops. Shows setpoint vs actual, error, P/I/D terms, and control output with gauge and plot widgets.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Control",
+  "files": [
+    "PID-Controller.ssproj"
+  ]
+}
