@@ -12,6 +12,13 @@
   "entry": "gauge.py",
   "runtime": "python3",
   "terminal": false,
+  "dependencies": [
+    {
+      "name": "Python 3",
+      "executables": ["python3", "python"],
+      "url": "https://www.python.org/downloads/"
+    }
+  ],
   "files": [
     "info.json",
     "gauge.py",

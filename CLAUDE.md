@@ -278,6 +278,24 @@ python plugin.py %*
 - `runtime: ""` means the entry is a native executable / shell script
 - Fallback order: exact `os/arch`, then `os/*`, then `*`, then top-level fields
 
+### Plugin dependencies
+
+Plugins declare external dependencies so Serial Studio can verify they are installed and prompt the user to download them if missing:
+
+```json
+"dependencies": [
+    {
+        "name": "Python 3",
+        "executables": ["python3", "python"],
+        "url": "https://www.python.org/downloads/"
+    }
+]
+```
+
+- `name`: human-readable dependency name shown to the user
+- `executables`: array of executable names to search for in PATH (checked in order, any match satisfies the dependency)
+- `url`: download page URL opened in the browser if the dependency is not found
+
 ### Plugin icons
 
 Plugins should include an `icon.svg` for display in the start menu and toolbar. Add to info.json:
