@@ -10,7 +10,7 @@ HTML report on exit.
 Requirements: Serial Studio API server on port 7777, Python 3.6+, tkinter.
 """
 
-import json, math, signal, socket, sys, threading, time, webbrowser
+import json, math, os, re, signal, socket, sys, threading, time, webbrowser
 from datetime import datetime
 from pathlib import Path
 
@@ -149,6 +149,7 @@ class DataStore:
         self.frame_count = 0
         self.start_time = None
         self.last_frame_time = None
+        self.project_title = None
 
     @property
     def is_active(self):
@@ -172,6 +173,8 @@ class DataStore:
             if self.start_time is None:
                 self.start_time = now
             self.last_frame_time = now
+            if self.project_title is None and frame.get("title"):
+                self.project_title = frame["title"]
             idx = 0
             for g in frame.get("groups", []):
                 gt = g.get("title", "")
@@ -375,7 +378,10 @@ Frames: {store.frame_count:,} &middot; Duration: {dur:.1f}s &middot; {rate:.1f} 
 <th>Mean</th><th>Std Dev</th></tr>
 {rows}</table></body></html>"""
 
-    out = Path.home() / "Documents" / "Serial Studio"
+    workspace = Path.home() / "Documents" / "Serial Studio"
+    project_name = store.project_title or "Untitled Project"
+    safe_name = re.sub(r'[<>:"/\\|?*]', '_', project_name).strip()
+    out = workspace / "Stats" / safe_name
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"stats-{datetime.now().strftime('%Y%m%d-%H%M%S')}.html"
     path.write_text(html)

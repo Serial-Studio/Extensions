@@ -19,7 +19,7 @@ If Tkinter is not available (headless systems), the plugin falls back to console
 
 ## HTML Report
 
-On shutdown, the plugin generates a styled HTML report saved to your Serial Studio workspace folder (`~/Documents/Serial Studio/`). The report includes all computed statistics and session metadata (duration, frame count, frame rate).
+On shutdown, the plugin generates a styled HTML report saved to `~/Documents/Serial Studio/Stats/<Project Name>/`. The folder is created automatically if it does not exist. The report includes all computed statistics and session metadata (duration, frame count, frame rate).
 
 ## Requirements
 
