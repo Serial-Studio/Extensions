@@ -8,6 +8,7 @@
   "license": "MIT",
   "category": "Visualization",
   "icon": "icon.svg",
+  "screenshot": "screenshot.png",
   "entry": "gauge.py",
   "runtime": "python3",
   "terminal": false,

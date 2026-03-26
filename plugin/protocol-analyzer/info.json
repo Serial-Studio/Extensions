@@ -7,6 +7,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "category": "Debugging",
+  "screenshot": "screenshot.png",
   "entry": "analyzer.py",
   "runtime": "python3",
   "terminal": false,
