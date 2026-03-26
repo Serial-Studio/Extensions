@@ -37,6 +37,10 @@ ROW_ALT  = "#111820"
 LOG_BG   = "#0a0e14"
 BADGE_OK = "#238636"
 
+# Platform-aware font families
+MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+
 # ── Threshold persistence ────────────────────────────────────────────────────
 
 THRESH_FILE = Path(__file__).parent / "thresholds.json"
@@ -195,14 +199,14 @@ class App:
         hdr = tk.Frame(self.root, bg=HEADER, height=44)
         hdr.pack(fill="x"); hdr.pack_propagate(False)
         tk.Label(hdr, text="Threshold Alerts", bg=HEADER, fg=HDR_TXT,
-                 font=("Helvetica Neue", 13, "bold")).pack(side="left", padx=14)
+                 font=(SANS_FONT, 13, "bold")).pack(side="left", padx=14)
 
         self.badge = tk.Label(hdr, text=" 0 alerts ", bg=BADGE_OK, fg=TEXT,
-                              font=("Menlo", 10, "bold"), padx=6)
+                              font=(MONO_FONT, 10, "bold"), padx=6)
         self.badge.pack(side="right", padx=14, pady=10)
 
         self.status = tk.Label(hdr, text="● Connecting", bg=HEADER, fg=DIM,
-                               font=("Helvetica Neue", 11))
+                               font=(SANS_FONT, 11))
         self.status.pack(side="right", padx=(0, 8))
 
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
@@ -221,11 +225,11 @@ class App:
         style.configure("AL.Treeview",
                         background=SURFACE, foreground=TEXT,
                         fieldbackground=SURFACE, rowheight=26,
-                        borderwidth=0, font=("Menlo", 11))
+                        borderwidth=0, font=(MONO_FONT, 11))
         style.configure("AL.Treeview.Heading",
                         background="#1c2633", foreground=DIM,
                         borderwidth=0, relief="flat",
-                        font=("Helvetica Neue", 10, "bold"))
+                        font=(SANS_FONT, 10, "bold"))
         style.map("AL.Treeview",
                   background=[("selected", "#1f3a5f")],
                   foreground=[("selected", ACCENT)])
@@ -241,12 +245,6 @@ class App:
             self.tree.column(col, width=w, anchor=a, minwidth=40)
 
         self.tree.pack(fill="both", expand=True)
-        if sys.platform != "darwin":
-            vsb = tk.Scrollbar(top, orient="vertical", command=self.tree.yview,
-                               bg=SURFACE, troughcolor=BG, highlightthickness=0,
-                               borderwidth=0, width=10)
-            self.tree.configure(yscrollcommand=vsb.set)
-            vsb.pack(side="right", fill="y")
 
         self.tree.tag_configure("ok", foreground=GREEN)
         self.tree.tag_configure("alert", foreground=RED)
@@ -255,7 +253,7 @@ class App:
         self.tree.bind("<Double-1>", self._on_double_click)
 
         tk.Label(top, text="Double-click Low / High to set thresholds",
-                 bg=BG, fg=DIM, font=("Helvetica Neue", 10)).pack(anchor="w", pady=(4, 0))
+                 bg=BG, fg=DIM, font=(SANS_FONT, 10)).pack(anchor="w", pady=(4, 0))
 
         # bottom: log
         bot = tk.Frame(pane, bg=LOG_BG)
@@ -264,10 +262,10 @@ class App:
         log_hdr = tk.Frame(bot, bg=LOG_BG, height=22)
         log_hdr.pack(fill="x"); log_hdr.pack_propagate(False)
         tk.Label(log_hdr, text="EVENT LOG", bg=LOG_BG, fg=DIM,
-                 font=("Helvetica Neue", 9, "bold")).pack(side="left", padx=8)
+                 font=(SANS_FONT, 9, "bold")).pack(side="left", padx=8)
 
         self.log_text = tk.Text(
-            bot, bg=LOG_BG, fg="#ff9492", font=("Menlo", 10),
+            bot, bg=LOG_BG, fg="#ff9492", font=(MONO_FONT, 10),
             state="disabled", wrap="none", highlightthickness=0,
             borderwidth=0, padx=8, pady=4)
         self.log_text.pack(fill="both", expand=True)
@@ -279,7 +277,7 @@ class App:
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
         ftr = tk.Frame(self.root, bg=BG, height=28)
         ftr.pack(fill="x"); ftr.pack_propagate(False)
-        self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM, font=("Menlo", 10))
+        self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM, font=(MONO_FONT, 10))
         self.lbl_fc.pack(side="left", padx=14)
 
         self.iid_map = {}
@@ -322,9 +320,9 @@ class App:
         dlg.resizable(False, False)
 
         tk.Label(dlg, text=f"{col} for {label}:", fg=TEXT, bg=SURFACE,
-                 font=("Helvetica Neue", 11)).pack(pady=(12, 6))
+                 font=(SANS_FONT, 11)).pack(pady=(12, 6))
 
-        entry = tk.Entry(dlg, font=("Menlo", 12), bg=BG, fg=TEXT,
+        entry = tk.Entry(dlg, font=(MONO_FONT, 12), bg=BG, fg=TEXT,
                          insertbackground=ACCENT, relief="flat",
                          highlightthickness=1, highlightcolor=ACCENT,
                          highlightbackground=BORDER)

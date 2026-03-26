@@ -35,6 +35,10 @@ RED      = "#f85149"
 ROW_ALT  = "#111820"
 SELECT   = "#1f3a5f"
 
+# Platform-aware font families
+MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def fmt(v):
@@ -216,15 +220,15 @@ class App:
         hdr = tk.Frame(self.root, bg=HEADER, height=44)
         hdr.pack(fill="x"); hdr.pack_propagate(False)
         tk.Label(hdr, text="Data Statistics Logger", bg=HEADER, fg=TEXT,
-                 font=("Helvetica Neue", 13, "bold")).pack(side="left", padx=14)
+                 font=(SANS_FONT, 13, "bold")).pack(side="left", padx=14)
 
         self.status = tk.Label(hdr, text="● Connecting", bg=HEADER, fg=DIM,
-                               font=("Helvetica Neue", 11))
+                               font=(SANS_FONT, 11))
         self.status.pack(side="right", padx=14)
 
         self.freeze_btn = tk.Label(
             hdr, text="  Freeze  ", bg=BORDER, fg=TEXT, cursor="hand2",
-            font=("Helvetica Neue", 10), padx=8, pady=2)
+            font=(SANS_FONT, 10), padx=8, pady=2)
         self.freeze_btn.pack(side="right", padx=(0, 8))
         self.freeze_btn.bind("<Button-1>", lambda _: self._toggle_freeze())
 
@@ -239,11 +243,11 @@ class App:
         style.configure("ST.Treeview",
                         background=SURFACE, foreground=TEXT,
                         fieldbackground=SURFACE, rowheight=26,
-                        borderwidth=0, font=("Menlo", 11))
+                        borderwidth=0, font=(MONO_FONT, 11))
         style.configure("ST.Treeview.Heading",
                         background=HEADER, foreground=DIM,
                         borderwidth=0, relief="flat",
-                        font=("Helvetica Neue", 10, "bold"))
+                        font=(SANS_FONT, 10, "bold"))
         style.map("ST.Treeview",
                   background=[("selected", "#1f3a5f")],
                   foreground=[("selected", ACCENT)])
@@ -259,12 +263,6 @@ class App:
                              minwidth=40)
 
         self.tree.pack(side="left", fill="both", expand=True)
-        if sys.platform != "darwin":
-            vsb = tk.Scrollbar(tf, orient="vertical", command=self.tree.yview,
-                               bg=SURFACE, troughcolor=BG, highlightthickness=0,
-                               borderwidth=0, width=10)
-            self.tree.configure(yscrollcommand=vsb.set)
-            vsb.pack(side="right", fill="y")
 
         self.tree.tag_configure("even", background=SURFACE)
         self.tree.tag_configure("odd", background=ROW_ALT)
@@ -273,9 +271,9 @@ class App:
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
         ftr = tk.Frame(self.root, bg=BG, height=28)
         ftr.pack(fill="x"); ftr.pack_propagate(False)
-        self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM, font=("Menlo", 10))
+        self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM, font=(MONO_FONT, 10))
         self.lbl_fc.pack(side="left", padx=14)
-        self.lbl_rate = tk.Label(ftr, text="", bg=BG, fg=DIM, font=("Menlo", 10))
+        self.lbl_rate = tk.Label(ftr, text="", bg=BG, fg=DIM, font=(MONO_FONT, 10))
         self.lbl_rate.pack(side="right", padx=14)
 
         self.iid_map = {}

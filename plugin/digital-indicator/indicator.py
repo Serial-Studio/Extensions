@@ -38,6 +38,10 @@ ACCENT   = "#58a6ff"
 GREEN    = "#3fb950"
 RED      = "#f85149"
 
+# Platform-aware font families
+MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+
 IDLE_SEC = 3
 
 # Color presets for indicator displays
@@ -406,13 +410,13 @@ class IndicatorWindow:
 
         tk.Label(
             info_frame, text=self.label, bg=self.colors["bg"],
-            fg=self.colors["label"], font=("Helvetica Neue", 11, "bold"),
+            fg=self.colors["label"], font=(SANS_FONT, 11, "bold"),
             anchor="w",
         ).pack(side="left")
 
         self.units_lbl = tk.Label(
             info_frame, text=units, bg=self.colors["bg"],
-            fg=self.colors["label"], font=("Helvetica Neue", 11),
+            fg=self.colors["label"], font=(SANS_FONT, 11),
             anchor="e",
         )
         self.units_lbl.pack(side="right")
@@ -423,19 +427,19 @@ class IndicatorWindow:
 
         self.min_lbl = tk.Label(
             stats_frame, text="MIN: -", bg=self.colors["bg"],
-            fg=DIM, font=("Menlo", 9), anchor="w",
+            fg=DIM, font=(MONO_FONT, 9), anchor="w",
         )
         self.min_lbl.pack(side="left")
 
         self.max_lbl = tk.Label(
             stats_frame, text="MAX: -", bg=self.colors["bg"],
-            fg=DIM, font=("Menlo", 9), anchor="e",
+            fg=DIM, font=(MONO_FONT, 9), anchor="e",
         )
         self.max_lbl.pack(side="right")
 
         self.peak_lbl = tk.Label(
             stats_frame, text="", bg=self.colors["bg"],
-            fg=DIM, font=("Menlo", 9),
+            fg=DIM, font=(MONO_FONT, 9),
         )
         self.peak_lbl.pack()
 
@@ -474,7 +478,7 @@ class IndicatorWindow:
         lbl = tk.Label(
             parent, text=f"  {text}  ", cursor="hand2",
             bg=self.colors["dim"], fg=self.colors["label"],
-            font=("Menlo", 9, "bold"), padx=6, pady=4,
+            font=(MONO_FONT, 9, "bold"), padx=6, pady=4,
         )
         lbl.bind("<Button-1>", lambda _: command())
         lbl.bind("<Enter>", lambda _: lbl.config(bg=self.colors["digit"], fg=self.colors["bg"]))
@@ -649,10 +653,10 @@ class MasterApp:
         hdr.pack_propagate(False)
 
         tk.Label(hdr, text="Digital Indicator Panel", bg=HEADER, fg=TEXT,
-                 font=("Helvetica Neue", 13, "bold")).pack(side="left", padx=14)
+                 font=(SANS_FONT, 13, "bold")).pack(side="left", padx=14)
 
         self.status = tk.Label(hdr, text="● Connecting", bg=HEADER, fg=DIM,
-                               font=("Helvetica Neue", 11))
+                               font=(SANS_FONT, 11))
         self.status.pack(side="right", padx=14)
 
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
@@ -660,7 +664,7 @@ class MasterApp:
         # ── Instructions ─────────────────────────────────────────────────
         tk.Label(
             self.root, text="Double-click a dataset to open an indicator display",
-            bg=BG, fg=DIM, font=("Helvetica Neue", 10), anchor="w",
+            bg=BG, fg=DIM, font=(SANS_FONT, 10), anchor="w",
         ).pack(fill="x", padx=14, pady=(8, 4))
 
         # ── Dataset list ─────────────────────────────────────────────────
@@ -669,11 +673,11 @@ class MasterApp:
         style.configure("DI.Treeview",
                         background=SURFACE, foreground=TEXT,
                         fieldbackground=SURFACE, rowheight=28,
-                        borderwidth=0, font=("Menlo", 11))
+                        borderwidth=0, font=(MONO_FONT, 11))
         style.configure("DI.Treeview.Heading",
                         background=HEADER, foreground=DIM,
                         borderwidth=0, relief="flat",
-                        font=("Helvetica Neue", 10, "bold"))
+                        font=(SANS_FONT, 10, "bold"))
         style.map("DI.Treeview",
                   background=[("selected", "#1f3a5f")],
                   foreground=[("selected", ACCENT)])
@@ -691,12 +695,6 @@ class MasterApp:
                              minwidth=40)
 
         self.tree.pack(side="left", fill="both", expand=True)
-        if sys.platform != "darwin":
-            vsb = tk.Scrollbar(tf, orient="vertical", command=self.tree.yview,
-                               bg=SURFACE, troughcolor=BG, highlightthickness=0,
-                               borderwidth=0, width=10)
-            self.tree.configure(yscrollcommand=vsb.set)
-            vsb.pack(side="right", fill="y")
 
         self.tree.tag_configure("even", background=SURFACE)
         self.tree.tag_configure("odd", background="#111820")
@@ -708,11 +706,11 @@ class MasterApp:
         ftr.pack(fill="x")
         ftr.pack_propagate(False)
 
-        self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM, font=("Menlo", 10))
+        self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM, font=(MONO_FONT, 10))
         self.lbl_fc.pack(side="left", padx=14)
 
         self.lbl_indicators = tk.Label(ftr, text="0 displays", bg=BG, fg=DIM,
-                                       font=("Menlo", 10))
+                                       font=(MONO_FONT, 10))
         self.lbl_indicators.pack(side="right", padx=14)
 
         self.iid_map = {}

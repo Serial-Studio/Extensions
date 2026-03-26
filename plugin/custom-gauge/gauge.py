@@ -32,6 +32,10 @@ RED      = "#f85149"
 ROW_ALT  = "#111820"
 SELECT   = "#1f3a5f"
 
+# Platform-aware font families
+MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+
 IDLE_SEC = 3
 
 NEEDLE_COLORS = ["#58a6ff", "#3fb950", "#f85149", "#d29922", "#d2a8ff",
@@ -263,7 +267,7 @@ def draw_dial(canvas, cx, cy, radius, sweep_deg, min_val, max_val, zones=None):
             ly = cy - label_r * sin_a
             txt = f"{val:.0f}" if abs(val) >= 1 else f"{val:.2f}"
             canvas.create_text(lx, ly, text=txt, fill=DIM, tags="dial",
-                               font=("Menlo", max(8, int(radius * 0.07))))
+                               font=(MONO_FONT, max(8, int(radius * 0.07))))
 
     # Center dot (behind needles)
     dot_r = max(4, int(radius * 0.06))
@@ -321,7 +325,7 @@ def draw_needles(canvas, cx, cy, radius, sweep_deg, needles, min_val, max_val):
         txt = f"{short}\n{value:.4f}"
         canvas.create_text(cx, y_base + i * (font_size * 2.8),
                            text=txt, fill=color, tags="needle",
-                           font=("Menlo", font_size), justify="center")
+                           font=(MONO_FONT, font_size), justify="center")
 
 
 # ── Gauge Window ─────────────────────────────────────────────────────────────
@@ -372,7 +376,7 @@ class GaugeWindow:
 
         def make_lbl_btn(parent, text, cmd):
             l = tk.Label(parent, text=f" {text} ", cursor="hand2",
-                         bg=BORDER, fg=TEXT, font=("Menlo", 9, "bold"),
+                         bg=BORDER, fg=TEXT, font=(MONO_FONT, 9, "bold"),
                          padx=4, pady=2)
             l.bind("<Button-1>", lambda _: cmd())
             l.bind("<Enter>", lambda _: l.config(bg=ACCENT, fg=BG))
@@ -380,7 +384,7 @@ class GaugeWindow:
             return l
 
         self.range_lbl = tk.Label(
-            ctrl, text="Auto", bg=BG, fg=DIM, font=("Menlo", 9))
+            ctrl, text="Auto", bg=BG, fg=DIM, font=(MONO_FONT, 9))
         self.range_lbl.pack(side="left")
 
         make_lbl_btn(ctrl, "SET MIN", self._set_min).pack(side="left", padx=(6, 2))
@@ -438,9 +442,9 @@ class GaugeWindow:
         dlg.resizable(False, False)
 
         tk.Label(dlg, text=title, fg=TEXT, bg=SURFACE,
-                 font=("Helvetica Neue", 11)).pack(pady=(10, 4))
+                 font=(SANS_FONT, 11)).pack(pady=(10, 4))
 
-        entry = tk.Entry(dlg, font=("Menlo", 12), bg=BG, fg=TEXT,
+        entry = tk.Entry(dlg, font=(MONO_FONT, 12), bg=BG, fg=TEXT,
                          insertbackground=ACCENT, relief="flat",
                          highlightthickness=1, highlightcolor=ACCENT,
                          highlightbackground=BORDER)
@@ -472,13 +476,13 @@ class GaugeWindow:
         dlg.resizable(False, True)
 
         tk.Label(dlg, text="Select a dataset to add:", fg=TEXT, bg=SURFACE,
-                 font=("Helvetica Neue", 11)).pack(pady=(10, 4))
+                 font=(SANS_FONT, 11)).pack(pady=(10, 4))
 
         style = ttk.Style()
         style.configure("GD.Treeview",
                         background=BG, foreground=TEXT,
                         fieldbackground=BG, rowheight=24,
-                        borderwidth=0, font=("Menlo", 10))
+                        borderwidth=0, font=(MONO_FONT, 10))
         style.configure("GD.Treeview.Heading",
                         background=HEADER, foreground=DIM, borderwidth=0)
 
@@ -612,16 +616,16 @@ class MasterApp:
         hdr = tk.Frame(self.root, bg=HEADER, height=44)
         hdr.pack(fill="x"); hdr.pack_propagate(False)
         tk.Label(hdr, text="Custom Gauge Panel", bg=HEADER, fg=TEXT,
-                 font=("Helvetica Neue", 13, "bold")).pack(side="left", padx=14)
+                 font=(SANS_FONT, 13, "bold")).pack(side="left", padx=14)
         self.status = tk.Label(hdr, text="● Connecting", bg=HEADER, fg=DIM,
-                               font=("Helvetica Neue", 11))
+                               font=(SANS_FONT, 11))
         self.status.pack(side="right", padx=14)
 
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
 
         tk.Label(self.root,
                  text="Double-click a dataset to create a gauge. Add more needles from the gauge window.",
-                 bg=BG, fg=DIM, font=("Helvetica Neue", 10), anchor="w",
+                 bg=BG, fg=DIM, font=(SANS_FONT, 10), anchor="w",
                  wraplength=460).pack(fill="x", padx=14, pady=(8, 4))
 
         # Dataset list
@@ -630,11 +634,11 @@ class MasterApp:
         style.configure("GG.Treeview",
                         background=SURFACE, foreground=TEXT,
                         fieldbackground=SURFACE, rowheight=26,
-                        borderwidth=0, font=("Menlo", 11))
+                        borderwidth=0, font=(MONO_FONT, 11))
         style.configure("GG.Treeview.Heading",
                         background=HEADER, foreground=DIM,
                         borderwidth=0, relief="flat",
-                        font=("Helvetica Neue", 10, "bold"))
+                        font=(SANS_FONT, 10, "bold"))
         style.map("GG.Treeview",
                   background=[("selected", SELECT)],
                   foreground=[("selected", ACCENT)])
@@ -653,12 +657,6 @@ class MasterApp:
                              minwidth=40)
 
         self.tree.pack(side="left", fill="both", expand=True)
-        if sys.platform != "darwin":
-            vsb = tk.Scrollbar(tf, orient="vertical", command=self.tree.yview,
-                               bg=SURFACE, troughcolor=BG, highlightthickness=0,
-                               borderwidth=0, width=10)
-            self.tree.configure(yscrollcommand=vsb.set)
-            vsb.pack(side="right", fill="y")
 
         self.tree.tag_configure("even", background=SURFACE)
         self.tree.tag_configure("odd", background=ROW_ALT)
@@ -669,10 +667,10 @@ class MasterApp:
         ftr = tk.Frame(self.root, bg=BG, height=28)
         ftr.pack(fill="x"); ftr.pack_propagate(False)
         self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM,
-                               font=("Menlo", 10))
+                               font=(MONO_FONT, 10))
         self.lbl_fc.pack(side="left", padx=14)
         self.lbl_gauges = tk.Label(ftr, text="0 gauges", bg=BG, fg=DIM,
-                                    font=("Menlo", 10))
+                                    font=(MONO_FONT, 10))
         self.lbl_gauges.pack(side="right", padx=14)
 
         self.iid_map = {}

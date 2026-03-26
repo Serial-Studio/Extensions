@@ -33,6 +33,10 @@ RED      = "#f85149"
 ROW_ALT  = "#111820"
 SELECT   = "#1f3a5f"
 
+# Platform-aware font families
+MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+
 SPARK    = "▁▂▃▄▅▆▇█"
 HISTORY  = 60
 IDLE_SEC = 3
@@ -216,15 +220,15 @@ class App:
         hdr.pack_propagate(False)
 
         tk.Label(hdr, text="Live Data Table", bg=HEADER, fg=TEXT,
-                 font=("Helvetica Neue", 13, "bold")).pack(side="left", padx=14)
+                 font=(SANS_FONT, 13, "bold")).pack(side="left", padx=14)
 
         self.status_lbl = tk.Label(hdr, text="● Connecting", bg=HEADER,
-                                   fg=DIM, font=("Helvetica Neue", 11))
+                                   fg=DIM, font=(SANS_FONT, 11))
         self.status_lbl.pack(side="right", padx=14)
 
         self.freeze_btn = tk.Label(
             hdr, text="  Freeze  ", bg=BORDER, fg=TEXT, cursor="hand2",
-            font=("Helvetica Neue", 10), padx=8, pady=2)
+            font=(SANS_FONT, 10), padx=8, pady=2)
         self.freeze_btn.pack(side="right", padx=(0, 8))
         self.freeze_btn.bind("<Button-1>", lambda _: self._toggle_freeze())
 
@@ -236,12 +240,12 @@ class App:
         sf.pack_propagate(False)
 
         tk.Label(sf, text="Filter:", bg=BG, fg=DIM,
-                 font=("Helvetica Neue", 10)).pack(side="left")
+                 font=(SANS_FONT, 10)).pack(side="left")
 
         self.search_var = tk.StringVar()
         tk.Entry(
             sf, textvariable=self.search_var, bg=SURFACE, fg=TEXT,
-            insertbackground=ACCENT, font=("Menlo", 11), relief="flat",
+            insertbackground=ACCENT, font=(MONO_FONT, 11), relief="flat",
             highlightthickness=1, highlightcolor=ACCENT,
             highlightbackground=BORDER,
         ).pack(side="left", fill="x", expand=True, padx=(6, 0))
@@ -252,11 +256,11 @@ class App:
         style.configure("LT.Treeview",
                         background=SURFACE, foreground=TEXT,
                         fieldbackground=SURFACE, rowheight=26,
-                        borderwidth=0, font=("Menlo", 11))
+                        borderwidth=0, font=(MONO_FONT, 11))
         style.configure("LT.Treeview.Heading",
                         background=HEADER, foreground=DIM,
                         borderwidth=0, relief="flat",
-                        font=("Helvetica Neue", 10, "bold"))
+                        font=(SANS_FONT, 10, "bold"))
         style.map("LT.Treeview",
                   background=[("selected", SELECT)],
                   foreground=[("selected", ACCENT)])
@@ -277,12 +281,6 @@ class App:
             self.tree.column(col, width=w, anchor=a, minwidth=40)
 
         self.tree.pack(side="left", fill="both", expand=True)
-        if sys.platform != "darwin":
-            vsb = tk.Scrollbar(tf, orient="vertical", command=self.tree.yview,
-                               bg=SURFACE, troughcolor=BG, highlightthickness=0,
-                               borderwidth=0, width=10)
-            self.tree.configure(yscrollcommand=vsb.set)
-            vsb.pack(side="right", fill="y")
 
         self.tree.tag_configure("even", background=SURFACE)
         self.tree.tag_configure("odd", background=ROW_ALT)
@@ -294,11 +292,11 @@ class App:
         ftr.pack_propagate(False)
 
         self.lbl_fc = tk.Label(ftr, text="0 frames", bg=BG, fg=DIM,
-                               font=("Menlo", 10))
+                               font=(MONO_FONT, 10))
         self.lbl_fc.pack(side="left", padx=14)
 
         self.lbl_rate = tk.Label(ftr, text="", bg=BG, fg=DIM,
-                                 font=("Menlo", 10))
+                                 font=(MONO_FONT, 10))
         self.lbl_rate.pack(side="right", padx=14)
 
         self.iid_map = {}

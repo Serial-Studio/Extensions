@@ -38,6 +38,10 @@ FIELD_CLR= "#d2a8ff"
 UNITS_CLR= "#7ee787"
 TAG_CLR  = "#79c0ff"
 
+# Platform-aware font families
+MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+
 MAX_FRAMES = 1000
 RATE_W, RATE_H = 200, 40
 
@@ -299,7 +303,7 @@ class RateGraph(tk.Canvas):
 
         # label
         self.create_text(w - pad, pad, text=f"{values[-1]} fps",
-                         fill=GREEN, anchor="ne", font=("Menlo", 8))
+                         fill=GREEN, anchor="ne", font=(MONO_FONT, 8))
 
 
 # ── GUI ──────────────────────────────────────────────────────────────────────
@@ -321,16 +325,16 @@ class App:
         hdr = tk.Frame(self.root, bg=HEADER, height=44)
         hdr.pack(fill="x"); hdr.pack_propagate(False)
         tk.Label(hdr, text="Protocol Analyzer", bg=HEADER, fg=TEXT,
-                 font=("Helvetica Neue", 13, "bold")).pack(side="left", padx=14)
+                 font=(SANS_FONT, 13, "bold")).pack(side="left", padx=14)
 
         self.stats_lbl = tk.Label(hdr, text="", bg=HEADER, fg=DIM,
-                                  font=("Menlo", 10))
+                                  font=(MONO_FONT, 10))
         self.stats_lbl.pack(side="right", padx=14)
 
         # auto-scroll toggle
         self.scroll_btn = tk.Label(
             hdr, text="  Auto-scroll ✓  ", bg=GREEN, fg=BG, cursor="hand2",
-            font=("Helvetica Neue", 10), padx=6, pady=2)
+            font=(SANS_FONT, 10), padx=6, pady=2)
         self.scroll_btn.pack(side="right", padx=(0, 8))
         self.scroll_btn.bind("<Button-1>", lambda _: self._toggle_scroll())
 
@@ -354,11 +358,11 @@ class App:
         style.configure("PA.Treeview",
                         background=SURFACE, foreground=TEXT,
                         fieldbackground=SURFACE, rowheight=24,
-                        borderwidth=0, font=("Menlo", 10))
+                        borderwidth=0, font=(MONO_FONT, 10))
         style.configure("PA.Treeview.Heading",
                         background=HEADER, foreground=DIM,
                         borderwidth=0, relief="flat",
-                        font=("Helvetica Neue", 10, "bold"))
+                        font=(SANS_FONT, 10, "bold"))
         style.map("PA.Treeview",
                   background=[("selected", "#1f3a5f")],
                   foreground=[("selected", ACCENT)])
@@ -372,13 +376,6 @@ class App:
             self.tree.column(col, width=w, anchor="w" if col == "PREVIEW" else "e", minwidth=30)
 
         self.tree.pack(side="left", fill="both", expand=True)
-        if sys.platform != "darwin":
-            vsb = tk.Scrollbar(top, orient="vertical",
-                               command=self.tree.yview,
-                               bg=SURFACE, troughcolor=BG, highlightthickness=0,
-                               borderwidth=0, width=10)
-            self.tree.configure(yscrollcommand=vsb.set)
-            vsb.pack(side="right", fill="y")
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
 
         self.tree.tag_configure("even", background=SURFACE)
@@ -392,20 +389,20 @@ class App:
         det_hdr = tk.Frame(bot_frame, bg=DET_BG, height=22)
         det_hdr.pack(fill="x"); det_hdr.pack_propagate(False)
         tk.Label(det_hdr, text="FRAME DETAIL", bg=DET_BG, fg=DIM,
-                 font=("Helvetica Neue", 9, "bold")).pack(side="left", padx=8)
+                 font=(SANS_FONT, 9, "bold")).pack(side="left", padx=8)
 
         copy_btn = tk.Label(det_hdr, text="  Copy  ", bg=BORDER, fg=TEXT,
-                            cursor="hand2", font=("Helvetica Neue", 9), padx=4)
+                            cursor="hand2", font=(SANS_FONT, 9), padx=4)
         copy_btn.pack(side="right", padx=8)
         copy_btn.bind("<Button-1>", lambda _: self._copy_detail())
 
         self.detail = tk.Text(
-            bot_frame, bg=DET_BG, fg=DIM, font=("Menlo", 10),
+            bot_frame, bg=DET_BG, fg=DIM, font=(MONO_FONT, 10),
             state="disabled", wrap="none", highlightthickness=0,
             borderwidth=0, padx=8, pady=4)
         self.detail.pack(fill="both", expand=True)
 
-        self.detail.tag_configure("hdr", foreground=ACCENT, font=("Menlo", 10, "bold"))
+        self.detail.tag_configure("hdr", foreground=ACCENT, font=(MONO_FONT, 10, "bold"))
         self.detail.tag_configure("hex", foreground=HEX_CLR)
         self.detail.tag_configure("fld", foreground=FIELD_CLR)
         self.detail.tag_configure("val", foreground=TEXT)
@@ -416,9 +413,9 @@ class App:
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
         ftr = tk.Frame(self.root, bg=BG, height=28)
         ftr.pack(fill="x"); ftr.pack_propagate(False)
-        self.lbl_total = tk.Label(ftr, text="", bg=BG, fg=DIM, font=("Menlo", 10))
+        self.lbl_total = tk.Label(ftr, text="", bg=BG, fg=DIM, font=(MONO_FONT, 10))
         self.lbl_total.pack(side="left", padx=14)
-        self.lbl_avg = tk.Label(ftr, text="", bg=BG, fg=DIM, font=("Menlo", 10))
+        self.lbl_avg = tk.Label(ftr, text="", bg=BG, fg=DIM, font=(MONO_FONT, 10))
         self.lbl_avg.pack(side="right", padx=14)
 
         self._tick()
