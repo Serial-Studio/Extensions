@@ -39,8 +39,8 @@ UNITS_CLR= "#7ee787"
 TAG_CLR  = "#79c0ff"
 
 # Platform-aware font families
-MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
-SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+MONO_FONT = "Menlo" if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = "Helvetica Neue" if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
 
 MAX_FRAMES = 1000
 RATE_W, RATE_H = 200, 40

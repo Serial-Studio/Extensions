@@ -39,8 +39,8 @@ GREEN    = "#3fb950"
 RED      = "#f85149"
 
 # Platform-aware font families
-MONO_FONT = MONO_FONT if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
-SANS_FONT = SANS_FONT if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
+MONO_FONT = "Menlo" if sys.platform == "darwin" else "Consolas" if sys.platform == "win32" else "Monospace"
+SANS_FONT = "Helvetica Neue" if sys.platform == "darwin" else "Segoe UI" if sys.platform == "win32" else "Sans"
 
 IDLE_SEC = 3
 
