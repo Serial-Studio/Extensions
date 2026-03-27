@@ -9,7 +9,7 @@ zones, needle colors, and gauge styles (270°, 180°, 90° sweep).
 Requirements: Serial Studio API server on port 7777, Python 3.6+, tkinter.
 """
 
-import json, math, signal, socket, sys, threading, time
+import json, math, signal, sys, threading, time
 
 try:
     import tkinter as tk
@@ -41,91 +41,7 @@ IDLE_SEC = 3
 NEEDLE_COLORS = ["#58a6ff", "#3fb950", "#f85149", "#d29922", "#d2a8ff",
                  "#00e5ff", "#ff7b72", "#7ee787", "#ffa657", "#f778ba"]
 
-# ── API Client ───────────────────────────────────────────────────────────────
-
-class APIClient:
-    def __init__(self, host="localhost", port=7777):
-        self.host, self.port = host, port
-        self.sock = None
-        self.buffer = b""
-        self.req_id = 0
-        self.running = True
-        self.connected = False
-        self.on_frame = None
-        self.on_event = None
-        self.on_state_loaded = None
-        self._pending_state_id = None
-
-    def connect(self):
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(2.0)
-            s.connect((self.host, self.port))
-            self.sock, self.buffer, self.connected = s, b"", True
-            self._send("initialize", {
-                "protocolVersion": "2024-11-05",
-                "clientInfo": {"name": "Custom Gauge", "version": "1.0.0"},
-                "capabilities": {},
-            })
-            return True
-        except (ConnectionRefusedError, OSError):
-            self.connected = False
-            return False
-
-    def _send(self, method, params=None):
-        if not self.sock:
-            return
-        self.req_id += 1
-        try:
-            self.sock.sendall((json.dumps({
-                "jsonrpc": "2.0", "id": self.req_id,
-                "method": method, "params": params or {}
-            }) + "\n").encode())
-        except OSError:
-            self.connected = False
-
-    def save_state(self, plugin_id, state):
-        self._send("extensions.saveState", {"pluginId": plugin_id, "state": state})
-
-    def load_state_async(self, plugin_id):
-        """Send loadState request. Response handled in run_loop via on_state_loaded."""
-        self._pending_state_id = self.req_id + 1
-        self._send("extensions.loadState", {"pluginId": plugin_id})
-
-    def run_loop(self):
-        while self.running:
-            if not self.connected:
-                time.sleep(2); self.connect(); continue
-            self.sock.settimeout(1.0)
-            try:
-                chunk = self.sock.recv(8192)
-            except socket.timeout:
-                continue
-            except OSError:
-                self.connected = False; continue
-            if not chunk:
-                self.connected = False; continue
-            self.buffer += chunk
-            while b"\n" in self.buffer:
-                line, self.buffer = self.buffer.split(b"\n", 1)
-                try:
-                    msg = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if "frames" in msg and self.on_frame:
-                    for fw in msg["frames"]:
-                        d = fw.get("data")
-                        if d: self.on_frame(d)
-
-                elif "event" in msg and self.on_event:
-                    self.on_event(msg["event"])
-
-                elif "jsonrpc" in msg and self._pending_state_id:
-                    if msg.get("id") == self._pending_state_id:
-                        self._pending_state_id = None
-                        state = msg.get("result", {}).get("state", {})
-                        if self.on_state_loaded:
-                            self.on_state_loaded(state)
+from grpc_client import GRPCClient
 
 
 # ── Data store ───────────────────────────────────────────────────────────────
@@ -747,13 +663,23 @@ class MasterApp:
     def _save_state(self):
         gauges = [g.to_dict() for g in self.gauges if g.alive]
         if self.client.connected:
-            self.client.save_state("custom-gauge", {"gauges": gauges})
+            self.client.execute("extensions.saveState",
+                                {"pluginId": "custom-gauge",
+                                 "state": {"gauges": gauges}})
 
     def _restore_state(self):
         if not self.client.connected:
             return
-        self.client.on_state_loaded = self._on_state_loaded
-        self.client.load_state_async("custom-gauge")
+
+        def _load():
+            ok, result = self.client.execute(
+                "extensions.loadState", {"pluginId": "custom-gauge"})
+            if ok and isinstance(result, dict):
+                state = result.get("state", result)
+                if state:
+                    self.root.after(0, lambda: self._on_state_loaded(state))
+
+        threading.Thread(target=_load, daemon=True).start()
 
     def _on_state_loaded(self, state):
         if not state or "gauges" not in state:
@@ -805,7 +731,7 @@ class MasterApp:
 
 def main():
     store = DataStore()
-    client = APIClient()
+    client = GRPCClient()
     client.on_frame = store.ingest
 
     signal.signal(signal.SIGTERM, lambda *_: setattr(client, "running", False))
@@ -818,15 +744,12 @@ def main():
 
     try:
         app = MasterApp(store, client)
-        client.on_event = app._on_event
         app._restore_state()
         app.run()
     except Exception as e:
         print(f"[Gauge] {e}", file=sys.stderr)
 
-    client.running = False
-    if client.sock:
-        client.sock.close()
+    client.stop()
 
 
 if __name__ == "__main__":

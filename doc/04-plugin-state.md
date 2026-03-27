@@ -18,14 +18,14 @@ Project File (.ssproj)
 ### Save State
 
 ```python
-client._send("extensions.saveState", {
+success, _ = client.execute("extensions.saveState", {
     "pluginId": "my-plugin",
     "state": {
         "windows": [
             {"key": "f0", "label": "Temperature", "color": "#58a6ff"},
             {"key": "f1", "label": "Pressure", "color": "#3fb950"}
         ],
-        "settings": {"auto_range": true}
+        "settings": {"auto_range": True}
     }
 })
 ```
@@ -33,9 +33,11 @@ client._send("extensions.saveState", {
 ### Load State
 
 ```python
-client._send("extensions.loadState", {"pluginId": "my-plugin"})
-resp = client._read_response()
-state = resp["result"]["state"]  # {} if no saved state
+success, result = client.execute("extensions.loadState", {
+    "pluginId": "my-plugin"
+})
+if success:
+    state = result  # dict with saved state, or {} if none
 ```
 
 ## Recommended Lifecycle
@@ -47,9 +49,7 @@ Plugin starts
   │
   ├─► User interacts (opens windows, changes settings)
   │
-  ├─► {"event": "disconnected"} → saveState()
-  │
-  ├─► {"event": "connected"} → loadState() (project may have changed)
+  ├─► Periodic auto-save (optional, e.g. every 30s)
   │
   └─► Plugin quits → saveState() (final save)
 ```
@@ -74,34 +74,25 @@ class MyWindow:
 class App:
     def _save_state(self):
         windows = [w.to_dict() for w in self.windows if w.alive]
-        if self.client.connected:
-            self.client.save_state("my-plugin", {"windows": windows})
+        self.client.execute("extensions.saveState", {
+            "pluginId": "my-plugin",
+            "state": {"windows": windows}
+        })
 
     def _restore_state(self):
-        if not self.client.connected:
-            return
-        state = self.client.load_state("my-plugin")
-        if not state:
-            return
+        def _try():
+            success, result = self.client.execute(
+                "extensions.loadState", {"pluginId": "my-plugin"})
+            if not success or not result:
+                return
 
-        def try_restore():
-            # Wait for data fields to be available
-            with self.store.lock:
-                if not self.store.fields:
-                    self.root.after(500, try_restore)
-                    return
-
+            state = result if isinstance(result, dict) else {}
             for wc in state.get("windows", []):
                 # Recreate window from saved config
                 ...
 
-        self.root.after(500, try_restore)
-
-    def _on_event(self, event_name):
-        if event_name == "disconnected":
-            self._save_state()
-        elif event_name == "connected":
-            self._restore_state()
+        # Run on a background thread to avoid blocking tkinter
+        threading.Thread(target=_try, daemon=True).start()
 
     def _quit(self):
         self._save_state()
@@ -113,16 +104,15 @@ class App:
 ```python
 def main():
     store = DataStore()
-    client = APIClient()
+    client = GRPCClient()
     client.on_frame = store.ingest
 
-    client.connect()
     threading.Thread(target=client.run_loop, daemon=True).start()
 
     app = App(store, client)
-    client.on_event = app._on_event
     app._restore_state()
     app.run()
+    client.stop()
 ```
 
 ## Auto-Launch
@@ -134,6 +124,6 @@ No plugin-side code is needed for this. It's handled entirely by the ExtensionMa
 ## Important Notes
 
 - State is only saved when a project file is loaded (`operationMode == ProjectFile`)
-- The `_restore_state` must wait for data fields to arrive before creating windows (use `root.after(500, try_restore)` retry pattern)
-- Never hold the data lock while creating tkinter widgets. This causes deadlocks.
-- State objects should be JSON-serializable (dicts, lists, strings, numbers, bools)
+- The `_restore_state` should run on a background thread since `client.execute()` blocks
+- Never hold the data lock while creating tkinter widgets — this causes deadlocks
+- State objects must be JSON-serializable (dicts, lists, strings, numbers, bools)

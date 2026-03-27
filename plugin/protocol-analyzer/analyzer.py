@@ -9,7 +9,7 @@ toggle, copy-to-clipboard, packet limit control, and auto-reconnect.
 Requirements: Serial Studio API server on port 7777, Python 3.6+, tkinter.
 """
 
-import base64, json, signal, socket, sys, threading, time
+import base64, json, signal, sys, threading, time
 from collections import deque
 from datetime import datetime
 
@@ -45,90 +45,7 @@ SANS_FONT = "Helvetica Neue" if sys.platform == "darwin" else "Segoe UI" if sys.
 MAX_FRAMES = 1000
 RATE_W, RATE_H = 200, 40
 
-# ── API Client ───────────────────────────────────────────────────────────────
-
-class APIClient:
-    def __init__(self, host="localhost", port=7777):
-        self.host, self.port = host, port
-        self.sock = None
-        self.buffer = b""
-        self.req_id = 0
-        self.running = True
-        self.connected = False
-        self.has_dashboard = False
-        self.on_frame = None
-        self.on_raw = None
-
-    def connect(self):
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(2.0)
-            s.connect((self.host, self.port))
-            self.sock, self.buffer, self.connected = s, b"", True
-            self._send("initialize", {
-                "protocolVersion": "2024-11-05",
-                "clientInfo": {"name": "Protocol Analyzer", "version": "2.0.0"},
-                "capabilities": {},
-            })
-            self._detect_dashboard()
-            return True
-        except (ConnectionRefusedError, OSError):
-            self.connected = False
-            return False
-
-    def _send(self, method, params=None):
-        self.req_id += 1
-        try:
-            self.sock.sendall((json.dumps({
-                "jsonrpc": "2.0", "id": self.req_id,
-                "method": method, "params": params or {}
-            }) + "\n").encode())
-        except OSError:
-            self.connected = False
-
-    def _detect_dashboard(self):
-        """Auto-detect dashboard from first broadcast type in run_loop."""
-        pass  # Detection now happens inline in run_loop
-
-    def run_loop(self):
-        while self.running:
-            if not self.connected:
-                time.sleep(2)
-                self.connect()
-                continue
-
-            self.sock.settimeout(1.0)
-            try:
-                chunk = self.sock.recv(8192)
-            except socket.timeout:
-                continue
-            except OSError:
-                self.connected = False
-                continue
-            if not chunk:
-                self.connected = False
-                continue
-
-            self.buffer += chunk
-            while b"\n" in self.buffer:
-                line, self.buffer = self.buffer.split(b"\n", 1)
-                try:
-                    msg = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-
-                # Parsed frame broadcasts (when dashboard is active)
-                if "frames" in msg and self.on_frame:
-                    self.has_dashboard = True
-                    for fw in msg["frames"]:
-                        d = fw.get("data")
-                        if d:
-                            self.on_frame(d)
-
-                # Raw data broadcasts (when no dashboard / always available)
-                elif "data" in msg and "jsonrpc" not in msg and self.on_raw:
-                    if not self.has_dashboard:
-                        self.on_raw(msg["data"])
+from grpc_client import GRPCClient
 
 
 # ── Data model ───────────────────────────────────────────────────────────────
@@ -157,7 +74,9 @@ class DataStore:
         self.deltas = deque(maxlen=200)
         self.rate_history = deque(maxlen=RATE_W)  # fps samples for graph
         self._rate_frames = 0
+        self._rate_bytes = 0
         self._rate_t = None
+        self.current_bps = 0.0
 
     @property
     def is_active(self):
@@ -171,8 +90,10 @@ class DataStore:
 
     @property
     def fps(self):
-        d = self.duration
-        return self.frame_count / d if d > 0 else 0
+        """Current instantaneous frame rate."""
+        if self.rate_history:
+            return self.rate_history[-1]
+        return 0
 
     def ingest(self, frame_data):
         now = time.time()
@@ -188,11 +109,14 @@ class DataStore:
                 self.deltas.append(delta)
             self.last_time = now
 
-            # per-second rate sampling
+            # Rate sampling every 100ms, scaled to per-second
             self._rate_frames += 1
-            if now - (self._rate_t or now) >= 1.0:
-                self.rate_history.append(self._rate_frames)
+            elapsed = now - (self._rate_t or now)
+            if elapsed >= 0.1:
+                self.rate_history.append(self._rate_frames / elapsed)
+                self.current_bps = self._rate_bytes / elapsed
                 self._rate_frames = 0
+                self._rate_bytes = 0
                 self._rate_t = now
 
             decoded = []
@@ -209,6 +133,7 @@ class DataStore:
 
             raw_str = ",".join(raw_vals)
             self.total_bytes += len(raw_str)
+            self._rate_bytes += len(raw_str)
 
             ts = datetime.now().strftime("%H:%M:%S.%f")[:-3]
             self.frames.append(FrameRecord(
@@ -238,14 +163,18 @@ class DataStore:
             self.last_time = now
 
             self._rate_frames += 1
-            if now - (self._rate_t or now) >= 1.0:
-                self.rate_history.append(self._rate_frames)
+            elapsed = now - (self._rate_t or now)
+            if elapsed >= 0.1:
+                self.rate_history.append(self._rate_frames / elapsed)
+                self.current_bps = self._rate_bytes / elapsed
                 self._rate_frames = 0
+                self._rate_bytes = 0
                 self._rate_t = now
 
             # Build raw string and decoded fields from raw bytes
             raw_str = raw_bytes.decode("utf-8", errors="replace").strip()
             self.total_bytes += len(raw_bytes)
+            self._rate_bytes += len(raw_bytes)
 
             # Try to split as CSV for field display
             decoded = []
@@ -302,7 +231,7 @@ class RateGraph(tk.Canvas):
         self.create_line(pts, fill=GREEN, width=1.5, smooth=True)
 
         # label
-        self.create_text(w - pad, pad, text=f"{values[-1]} fps",
+        self.create_text(w - pad, pad, text=f"{values[-1]:.0f} fps",
                          fill=GREEN, anchor="ne", font=(MONO_FONT, 8))
 
 
@@ -483,15 +412,15 @@ class App:
             active = self.store.is_active
             dur = self.store.duration
             fps = self.store.fps
-            bps = total / dur if dur > 0 else 0
+            bps = self.store.current_bps
             avg_d = (sum(self.store.deltas) / len(self.store.deltas)
                      if self.store.deltas else 0)
             rates = list(self.store.rate_history)
 
-        mode = "Parsed" if self.client.has_dashboard else "Raw"
+        mode = "Parsed"  # gRPC StreamFrames only provides parsed frames
         if active:
             self.stats_lbl.config(
-                text=f"[{mode}]  {count:,} frames  •  {fps:.1f} fps  •  {bps/1024:.1f} KB/s")
+                text=f"[{mode}]  {count:,} frames  •  {fps:,.0f} fps  •  {bps/1024:.1f} KB/s")
         elif count > 0:
             self.stats_lbl.config(text=f"[{mode}]  {count:,} frames  •  {dur:.0f}s  •  Idle")
         else:
@@ -500,8 +429,9 @@ class App:
         self.lbl_total.config(text=f"{total:,} bytes captured")
         self.lbl_avg.config(text=f"avg \u0394 {avg_d:.1f} ms" if count > 0 else "")
 
-        # rate graph
+        # rate graph — use graph's latest value for stats label too
         if rates:
+            fps = rates[-1]
             self.rate_graph.draw(rates)
 
         # new frames
@@ -542,9 +472,10 @@ class App:
 
 def main():
     store = DataStore()
-    client = APIClient()
+    client = GRPCClient()
     client.on_frame = store.ingest
-    client.on_raw = store.ingest_raw
+    client.on_raw = lambda data, ts: store.ingest_raw(
+        base64.b64encode(data).decode("ascii"))
 
     signal.signal(signal.SIGTERM, lambda *_: setattr(client, "running", False))
     signal.signal(signal.SIGINT, lambda *_: setattr(client, "running", False))
@@ -559,9 +490,7 @@ def main():
     except Exception as e:
         print(f"[Analyzer] {e}", file=sys.stderr)
 
-    client.running = False
-    if client.sock:
-        client.sock.close()
+    client.stop()
 
 
 if __name__ == "__main__":

@@ -5,4 +5,4 @@ if not exist ".venv" python -m venv .venv
 call .venv\Scripts\activate.bat
 python -c "import grpc" 2>nul || pip install --quiet grpcio protobuf
 
-python stats_logger.py %*
+python plugin.py %*

@@ -12,6 +12,7 @@
   "entry": "indicator.py",
   "runtime": "python3",
   "terminal": false,
+  "grpc": true,
   "dependencies": [
     {
       "name": "Python 3",
@@ -22,7 +23,10 @@
   "files": [
     "info.json",
     "indicator.py",
-    "icon.svg"
+    "icon.svg",
+    "grpc_client.py",
+    "serialstudio_pb2.py",
+    "serialstudio_pb2_grpc.py"
   ],
   "platforms": {
     "darwin/*": {

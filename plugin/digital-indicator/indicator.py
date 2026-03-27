@@ -17,8 +17,10 @@ Features:
 Requirements: Serial Studio API server on port 7777, Python 3.6+, tkinter.
 """
 
-import json, math, signal, socket, sys, threading, time
+import math, signal, sys, threading, time
 from collections import deque
+
+from grpc_client import GRPCClient
 
 try:
     import tkinter as tk
@@ -223,98 +225,6 @@ def format_7seg(value, width=8, decimals=None):
         text = " " * pad + text
 
     return text
-
-
-# ── API Client ───────────────────────────────────────────────────────────────
-
-class APIClient:
-    def __init__(self, host="localhost", port=7777):
-        self.host, self.port = host, port
-        self.sock = None
-        self.buffer = b""
-        self.req_id = 0
-        self.running = True
-        self.connected = False
-        self.on_frame = None
-        self.on_event = None
-        self.on_state_loaded = None
-        self._pending_state_id = None
-
-    def connect(self):
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(2.0)
-            s.connect((self.host, self.port))
-            self.sock, self.buffer, self.connected = s, b"", True
-            self._send("initialize", {
-                "protocolVersion": "2024-11-05",
-                "clientInfo": {"name": "Digital Indicator", "version": "1.0.0"},
-                "capabilities": {},
-            })
-            return True
-        except (ConnectionRefusedError, OSError):
-            self.connected = False
-            return False
-
-    def _send(self, method, params=None):
-        if not self.sock:
-            return
-        self.req_id += 1
-        try:
-            self.sock.sendall((json.dumps({
-                "jsonrpc": "2.0", "id": self.req_id,
-                "method": method, "params": params or {}
-            }) + "\n").encode())
-        except OSError:
-            self.connected = False
-
-    def run_loop(self):
-        while self.running:
-            if not self.connected:
-                time.sleep(2)
-                self.connect()
-                continue
-            self.sock.settimeout(1.0)
-            try:
-                chunk = self.sock.recv(8192)
-            except socket.timeout:
-                continue
-            except OSError:
-                self.connected = False
-                continue
-            if not chunk:
-                self.connected = False
-                continue
-            self.buffer += chunk
-            while b"\n" in self.buffer:
-                line, self.buffer = self.buffer.split(b"\n", 1)
-                try:
-                    msg = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if "frames" in msg and self.on_frame:
-                    for fw in msg["frames"]:
-                        d = fw.get("data")
-                        if d:
-                            self.on_frame(d)
-
-                elif "event" in msg and self.on_event:
-                    self.on_event(msg["event"])
-
-                elif "jsonrpc" in msg and self._pending_state_id:
-                    if msg.get("id") == self._pending_state_id:
-                        self._pending_state_id = None
-                        state = msg.get("result", {}).get("state", {})
-                        if self.on_state_loaded:
-                            self.on_state_loaded(state)
-
-    def save_state(self, plugin_id, state):
-        self._send("extensions.saveState", {"pluginId": plugin_id, "state": state})
-
-    def load_state_async(self, plugin_id):
-        """Send loadState request. Response handled in run_loop via on_state_loaded."""
-        self._pending_state_id = self.req_id + 1
-        self._send("extensions.loadState", {"pluginId": plugin_id})
 
 
 # ── Data store ───────────────────────────────────────────────────────────────
@@ -859,7 +769,7 @@ class MasterApp:
 
 def main():
     store = DataStore()
-    client = APIClient()
+    client = GRPCClient()
     client.on_frame = store.ingest
 
     signal.signal(signal.SIGTERM, lambda *_: setattr(client, "running", False))
@@ -878,9 +788,7 @@ def main():
     except Exception as e:
         print(f"[Indicator] {e}", file=sys.stderr)
 
-    client.running = False
-    if client.sock:
-        client.sock.close()
+    client.stop()
 
 
 if __name__ == "__main__":

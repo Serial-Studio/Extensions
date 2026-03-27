@@ -9,4 +9,4 @@ fi
 . "$VENV_DIR/bin/activate"
 python3 -c "import grpc" 2>/dev/null || pip install --quiet grpcio protobuf
 
-exec python3 stats_logger.py "$@"
+exec python3 plugin.py "$@"

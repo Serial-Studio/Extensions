@@ -1,0 +1,35 @@
+{
+  "id": "my-plugin",
+  "type": "plugin",
+  "title": "My Plugin",
+  "description": "Short description of what this plugin does.",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "license": "MIT",
+  "category": "Visualization",
+  "icon": "icon.svg",
+  "entry": "plugin.py",
+  "runtime": "python3",
+  "terminal": false,
+  "grpc": true,
+  "dependencies": [
+    {
+      "name": "Python 3",
+      "executables": ["python3", "python"],
+      "url": "https://www.python.org/downloads/"
+    }
+  ],
+  "files": [
+    "info.json",
+    "plugin.py",
+    "grpc_client.py",
+    "serialstudio_pb2.py",
+    "serialstudio_pb2_grpc.py",
+    "icon.svg"
+  ],
+  "platforms": {
+    "darwin/*":  { "entry": "run.sh",  "runtime": "", "files": ["run.sh"] },
+    "linux/*":   { "entry": "run.sh",  "runtime": "", "files": ["run.sh"] },
+    "windows/*": { "entry": "run.cmd", "runtime": "", "files": ["run.cmd"] }
+  }
+}

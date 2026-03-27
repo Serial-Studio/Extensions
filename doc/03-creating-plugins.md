@@ -1,87 +1,36 @@
 # Creating Plugins
 
-Plugins are external programs that connect to Serial Studio's API server (TCP port 7777) to read live data and display custom visualizations.
+Plugins are external programs that connect to Serial Studio via **gRPC** (port 8888) for high-performance binary frame streaming. They can read live data, compute statistics, and display custom visualizations.
 
 ## Architecture
 
 ```
 Serial Studio                          Plugin (Python/native)
-┌──────────┐    TCP 7777    ┌──────────────────────────┐
-│ API      │◄──────────────►│ APIClient (socket)       │
-│ Server   │  JSON-RPC 2.0  │ DataStore (thread-safe)  │
-│          │  + broadcasts   │ App (tkinter GUI)        │
+┌──────────┐   gRPC 8888   ┌──────────────────────────┐
+│ gRPC     │◄─────────────►│ GRPCClient (streaming)   │
+│ Server   │  protobuf      │ DataStore (thread-safe)  │
+│          │  binary frames  │ App (tkinter GUI)        │
 └──────────┘                └──────────────────────────┘
 ```
 
+The gRPC server starts automatically when the API server is enabled. Plugins use a `GRPCClient` wrapper that handles connection, reconnection, and frame streaming.
+
 ## Minimal Plugin
+
+A complete working plugin with gRPC streaming and a tkinter GUI:
 
 ```python
 #!/usr/bin/env python3
-import json, socket, signal, sys, threading, time
+"""My Plugin — minimal gRPC example."""
+
+import signal, sys, threading, time
 
 try:
     import tkinter as tk
 except ImportError:
     sys.exit("tkinter required")
 
-class APIClient:
-    def __init__(self, host="localhost", port=7777):
-        self.host, self.port = host, port
-        self.sock = None
-        self.buffer = b""
-        self.req_id = 0
-        self.running = True
-        self.connected = False
-        self.on_frame = None
-        self.on_event = None
-
-    def connect(self):
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(2.0)
-            s.connect((self.host, self.port))
-            self.sock, self.buffer, self.connected = s, b"", True
-            self.req_id += 1
-            self.sock.sendall((json.dumps({
-                "jsonrpc": "2.0", "id": self.req_id,
-                "method": "initialize",
-                "params": {
-                    "protocolVersion": "2024-11-05",
-                    "clientInfo": {"name": "My Plugin", "version": "1.0.0"},
-                    "capabilities": {},
-                },
-            }) + "\n").encode())
-            return True
-        except (ConnectionRefusedError, OSError):
-            self.connected = False
-            return False
-
-    def run_loop(self):
-        while self.running:
-            if not self.connected:
-                time.sleep(2); self.connect(); continue
-            self.sock.settimeout(1.0)
-            try:
-                chunk = self.sock.recv(8192)
-            except socket.timeout:
-                continue
-            except OSError:
-                self.connected = False; continue
-            if not chunk:
-                self.connected = False; continue
-            self.buffer += chunk
-            while b"\n" in self.buffer:
-                line, self.buffer = self.buffer.split(b"\n", 1)
-                try:
-                    msg = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if "frames" in msg and self.on_frame:
-                    for fw in msg["frames"]:
-                        d = fw.get("data")
-                        if d: self.on_frame(d)
-                if "event" in msg and self.on_event:
-                    self.on_event(msg["event"])
+from grpc_client import GRPCClient
 
 class DataStore:
     def __init__(self):
@@ -121,32 +70,65 @@ class App:
 
 def main():
     store = DataStore()
-    client = APIClient()
+    client = GRPCClient()
     client.on_frame = store.ingest
 
-    signal.signal(signal.SIGTERM, lambda *_: setattr(client, "running", False))
-    signal.signal(signal.SIGINT, lambda *_: setattr(client, "running", False))
+    signal.signal(signal.SIGTERM, lambda *_: client.stop())
+    signal.signal(signal.SIGINT, lambda *_: client.stop())
 
-    client.connect()
     threading.Thread(target=client.run_loop, daemon=True).start()
     App(store, client).run()
-
-    client.running = False
-    if client.sock: client.sock.close()
+    client.stop()
 
 if __name__ == "__main__":
     main()
 ```
 
+## GRPCClient API
+
+The `grpc_client.py` module provides a drop-in client:
+
+| Property/Method | Description |
+|---|---|
+| `on_frame` | Callback `(frame_dict) → None`. Set before calling `run_loop()`. |
+| `connected` | `bool` — whether the gRPC channel is active. |
+| `running` | `bool` — controls the main loop. |
+| `run_loop()` | Blocking. Connects, streams frames, auto-reconnects. Run on a thread. |
+| `execute(command, params)` | Execute an API command. Returns `(success, result_or_error)`. |
+| `stop()` | Gracefully shuts down the client. |
+
+### Executing Commands
+
+```python
+success, result = client.execute("io.manager.getStatus")
+if success:
+    print(result)
+
+success, result = client.execute("io.driver.uart.setBaudRate", {"baudRate": 115200})
+```
+
 ## Frame Data Format
 
-```json
-{"frames": [{"data": {"title": "...", "groups": [
-    {"title": "Sensors", "datasets": [
-        {"title": "Temperature", "value": "25.3", "units": "°C",
-         "widgetMin": 0, "widgetMax": 100, "plotMin": 0, "plotMax": 150}
-    ]}
-]}}]}
+Frames arrive as Python dicts (converted from protobuf Struct):
+
+```python
+{
+    "title": "My Project",
+    "groups": [
+        {
+            "title": "Sensors",
+            "datasets": [
+                {
+                    "title": "Temperature",
+                    "value": "25.3",
+                    "units": "°C",
+                    "widgetMin": 0,
+                    "widgetMax": 100
+                }
+            ]
+        }
+    ]
+}
 ```
 
 Key dataset fields: `title`, `value`, `units`, `widgetMin`, `widgetMax`, `plotMin`, `plotMax`.
@@ -155,19 +137,32 @@ Key dataset fields: `title`, `value`, `units`, `widgetMin`, `widgetMax`, `plotMi
 
 ```
 plugin/my-plugin/
-  info.json       ← metadata
-  plugin.py       ← Python entry point
-  run.sh          ← Unix launcher (required for macOS)
-  run.cmd          ← Windows launcher
-  icon.svg        ← icon for start menu / toolbar
-  README.md       ← description
+  info.json                    ← metadata
+  plugin.py                    ← Python entry point
+  grpc_client.py               ← gRPC client wrapper
+  serialstudio_pb2.py          ← generated protobuf stubs
+  serialstudio_pb2_grpc.py     ← generated gRPC stubs
+  run.sh                       ← Unix launcher (venv + pip)
+  run.cmd                      ← Windows launcher (venv + pip)
+  icon.svg                     ← icon for start menu / toolbar
 ```
 
-### run.sh (required)
+### run.sh
+
+Creates a venv and auto-installs grpcio on first run:
 
 ```sh
 #!/bin/sh
 cd "$(dirname "$0")"
+
+VENV_DIR=".venv"
+if [ ! -d "$VENV_DIR" ]; then
+  python3 -m venv "$VENV_DIR"
+fi
+
+. "$VENV_DIR/bin/activate"
+python3 -c "import grpc" 2>/dev/null || pip install --quiet grpcio protobuf
+
 exec python3 plugin.py "$@"
 ```
 
@@ -176,6 +171,11 @@ exec python3 plugin.py "$@"
 ```cmd
 @echo off
 cd /d "%~dp0"
+
+if not exist ".venv" python -m venv .venv
+call .venv\Scripts\activate.bat
+python -c "import grpc" 2>nul || pip install --quiet grpcio protobuf
+
 python plugin.py %*
 ```
 
@@ -195,14 +195,46 @@ python plugin.py %*
   "entry": "plugin.py",
   "runtime": "python3",
   "terminal": false,
-  "files": ["info.json", "plugin.py", "icon.svg"],
+  "grpc": true,
+  "dependencies": [
+    {
+      "name": "Python 3",
+      "executables": ["python3", "python"],
+      "url": "https://www.python.org/downloads/"
+    }
+  ],
+  "files": [
+    "info.json",
+    "plugin.py",
+    "grpc_client.py",
+    "serialstudio_pb2.py",
+    "serialstudio_pb2_grpc.py",
+    "icon.svg"
+  ],
   "platforms": {
-    "darwin/*":  { "entry": "run.sh", "runtime": "", "files": ["run.sh"] },
-    "linux/*":   { "entry": "run.sh", "runtime": "", "files": ["run.sh"] },
+    "darwin/*":  { "entry": "run.sh",  "runtime": "", "files": ["run.sh"] },
+    "linux/*":   { "entry": "run.sh",  "runtime": "", "files": ["run.sh"] },
     "windows/*": { "entry": "run.cmd", "runtime": "", "files": ["run.cmd"] }
   }
 }
 ```
+
+**Key fields:**
+- `"grpc": true` — tells Serial Studio this plugin requires the gRPC server.
+- `dependencies` — only list system-level executables (Python). Pip packages are handled by the venv.
+- `files` — include the gRPC stubs so they're installed with the plugin.
+
+## Generating gRPC Stubs
+
+If you need to regenerate the Python stubs (e.g. after a Serial Studio API update):
+
+1. Export the `.proto` from Serial Studio: **Preferences → Export Protobuf File**
+2. Generate stubs:
+   ```bash
+   pip install grpcio-tools
+   python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. serialstudio.proto
+   ```
+3. Copy `serialstudio_pb2.py` and `serialstudio_pb2_grpc.py` to your plugin directory.
 
 ## macOS tkinter Rules
 
@@ -214,17 +246,6 @@ These rules are critical. Violating them causes invisible widgets or white artif
 4. **Avoid `ttk.Combobox`** in dark themes. The dropdown is always white.
 
 See [CLAUDE.md](../CLAUDE.md) for detailed patterns and code examples.
-
-## Lifecycle Events
-
-The API broadcasts events when connection state changes:
-
-```json
-{"event": "connected"}
-{"event": "disconnected"}
-```
-
-Listen for these alongside frame data in your `run_loop`.
 
 ## Next Steps
 

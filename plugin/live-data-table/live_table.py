@@ -9,7 +9,7 @@ column sorting, and automatic reconnection.
 Requirements: Serial Studio API server on port 7777, Python 3.6+, tkinter.
 """
 
-import json, math, signal, socket, sys, threading, time
+import math, signal, sys, threading, time
 from collections import deque
 
 try:
@@ -63,68 +63,7 @@ def sparkline(vals):
     return "".join(SPARK[min(7, int((v - lo) / r * 7.99))] for v in vals)
 
 
-# ── API Client ───────────────────────────────────────────────────────────────
-
-class APIClient:
-    def __init__(self, host="localhost", port=7777):
-        self.host, self.port = host, port
-        self.sock = None
-        self.buffer = b""
-        self.req_id = 0
-        self.running = True
-        self.connected = False
-        self.on_frame = None
-
-    def connect(self):
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(2.0)
-            s.connect((self.host, self.port))
-            self.sock, self.buffer, self.connected = s, b"", True
-            self.req_id += 1
-            self.sock.sendall((json.dumps({
-                "jsonrpc": "2.0", "id": self.req_id,
-                "method": "initialize",
-                "params": {
-                    "protocolVersion": "2024-11-05",
-                    "clientInfo": {"name": "Live Data Table", "version": "2.0.0"},
-                    "capabilities": {},
-                },
-            }) + "\n").encode())
-            return True
-        except (ConnectionRefusedError, OSError):
-            self.connected = False
-            return False
-
-    def run_loop(self):
-        while self.running:
-            if not self.connected:
-                time.sleep(2)
-                self.connect()
-                continue
-            self.sock.settimeout(1.0)
-            try:
-                chunk = self.sock.recv(8192)
-            except socket.timeout:
-                continue
-            except OSError:
-                self.connected = False
-                continue
-            if not chunk:
-                self.connected = False
-                continue
-            self.buffer += chunk
-            while b"\n" in self.buffer:
-                line, self.buffer = self.buffer.split(b"\n", 1)
-                try:
-                    msg = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if "frames" in msg and self.on_frame:
-                    for fw in msg["frames"]:
-                        d = fw.get("data")
-                        if d:
-                            self.on_frame(d)
+from grpc_client import GRPCClient
 
 
 # ── Data model ───────────────────────────────────────────────────────────────
@@ -404,14 +343,11 @@ class App:
 
 def main():
     store = DataStore()
-    client = APIClient()
+    client = GRPCClient()
     client.on_frame = store.ingest
 
     signal.signal(signal.SIGTERM, lambda *_: setattr(client, "running", False))
     signal.signal(signal.SIGINT, lambda *_: setattr(client, "running", False))
-
-    if not client.connect():
-        print("[LiveTable] Waiting for API server…", file=sys.stderr)
 
     threading.Thread(target=client.run_loop, daemon=True).start()
 
@@ -420,9 +356,7 @@ def main():
     except Exception as e:
         print(f"[LiveTable] {e}", file=sys.stderr)
 
-    client.running = False
-    if client.sock:
-        client.sock.close()
+    client.stop()
 
 
 if __name__ == "__main__":
