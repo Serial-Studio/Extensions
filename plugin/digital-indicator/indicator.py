@@ -702,13 +702,23 @@ class MasterApp:
     def _save_state(self):
         displays = [ind.to_dict() for ind in self.indicators if ind.alive]
         if self.client.connected:
-            self.client.save_state("digital-indicator", {"displays": displays})
+            self.client.execute("extensions.saveState",
+                                {"pluginId": "digital-indicator",
+                                 "state": {"displays": displays}})
 
     def _restore_state(self):
         if not self.client.connected:
             return
-        self.client.on_state_loaded = self._on_state_loaded
-        self.client.load_state_async("digital-indicator")
+
+        def _load():
+            ok, result = self.client.execute(
+                "extensions.loadState", {"pluginId": "digital-indicator"})
+            if ok and isinstance(result, dict):
+                state = result.get("state", result)
+                if state:
+                    self.root.after(0, lambda: self._on_state_loaded(state))
+
+        threading.Thread(target=_load, daemon=True).start()
 
     def _on_state_loaded(self, state):
         if not state or "displays" not in state:
