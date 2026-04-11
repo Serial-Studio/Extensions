@@ -2,13 +2,11 @@
 
 ## What are Extensions?
 
-Extensions add functionality to Serial Studio without modifying the core application. There are four types:
+Extensions add functionality to Serial Studio without modifying the core application. There are two types:
 
 | Type | Description | Example |
 |------|-------------|---------|
 | **Theme** | Custom color palette for the entire UI | Solarized Dark, Midnight |
-| **Frame Parser** | JavaScript decoder for custom protocols | NMEA GPS, Binary TLV |
-| **Project Template** | Pre-configured `.ssproj` project file | 6-DOF IMU, PID Controller |
 | **Plugin** | External program with its own UI | Digital Indicator, Custom Gauge |
 
 ## Installing Extensions

@@ -1,6 +1,6 @@
 # Serial Studio Extensions
 
-Extensions for [Serial Studio](https://serial-studio.com). Themes, plugins, frame parsers, and project templates that extend the application without modifying its core.
+Extensions for [Serial Studio](https://serial-studio.com). Themes and plugins that extend the application without modifying its core.
 
 ## Available Extensions
 
@@ -29,20 +29,6 @@ Extensions for [Serial Studio](https://serial-studio.com). Themes, plugins, fram
 | [Protocol Analyzer](plugin/protocol-analyzer/) | Debugging | Frame capture with hex dumps and timing analysis |
 | [Digital Indicator](plugin/digital-indicator/) | Visualization | Seven-segment displays with hold, tare, peak tracking |
 | [Custom Gauge](plugin/custom-gauge/) | Visualization | Multi-needle analog gauges with auto-ranging |
-
-### Frame Parsers
-
-| Extension | Description |
-|-----------|-------------|
-| [Binary TLV Parser](frame-parser/binary-tlv-parser/) | Decodes Type-Length-Value binary protocol frames |
-| [NMEA GPS Parser](frame-parser/nmea-gps-parser/) | Parses standard NMEA 0183 GGA/RMC sentences |
-
-### Project Templates
-
-| Extension | Description |
-|-----------|-------------|
-| [6-DOF IMU Dashboard](project-template/imu-6dof-template/) | Ready-to-use project for 6-axis IMU sensors |
-| [PID Controller Monitor](project-template/pid-controller-template/) | Dashboard for PID control loop tuning |
 
 ## Installation
 
@@ -87,8 +73,6 @@ See the [doc/](doc/) folder for detailed guides:
 manifest.json                    Extension index (references all info.json paths)
 theme/<id>/                      Color themes (palette JSON + code editor XML)
 plugin/<id>/                     External plugins (Python + shell wrappers)
-frame-parser/<id>/               JavaScript protocol decoders
-project-template/<id>/           Pre-configured .ssproj project files
 doc/                             Development guides
 ```
 

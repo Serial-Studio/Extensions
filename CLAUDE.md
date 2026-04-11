@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Extensions for Serial Studio: themes, frame parsers, project templates, and plugins.
+Extensions for Serial Studio: themes and plugins.
 
 ## Repository Structure
 
@@ -12,10 +12,6 @@ theme/<id>/info.json                   ← theme metadata
 theme/<id>/<name>.json                  ← theme color palette
 theme/<id>/code-editor/<name>.xml       ← code editor syntax colors
 theme/<id>/README.md                    ← theme description
-frame-parser/<id>/info.json            ← parser metadata
-frame-parser/<id>/<name>.js             ← JavaScript parse(frame) function
-project-template/<id>/info.json        ← template metadata
-project-template/<id>/<name>.ssproj     ← Serial Studio project file
 plugin/<id>/info.json                  ← plugin metadata
 plugin/<id>/<script>.py                 ← plugin entry point
 plugin/<id>/run.sh                      ← Unix launcher wrapper
@@ -32,7 +28,6 @@ plugin/<id>/README.md                   ← plugin description
 - File paths in info.json are relative to the info.json location
 - All versions are `0.0.1` during development
 - Themes must include a color palette JSON, code-editor XML, and README.md
-- Frame parsers must export `function parse(frame)` returning an array
 - Plugins communicate via Serial Studio's MCP/JSON-RPC API on port 7777
 - Plugins should handle SIGTERM gracefully for clean shutdown
 
