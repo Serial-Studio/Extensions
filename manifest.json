@@ -12,6 +12,7 @@
     "theme/midday/info.json",
     "theme/midnight/info.json",
     "theme/rust/info.json",
+    "theme/artemis/info.json",
     "plugin/data-stats-logger/info.json",
     "plugin/live-data-table/info.json",
     "plugin/threshold-alerts/info.json",

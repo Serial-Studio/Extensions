@@ -1,0 +1,16 @@
+{
+  "id": "artemis",
+  "type": "theme",
+  "title": "Artemis",
+  "description": "Deep-space dark theme inspired by NASA Orion flight software displays. Near-black backgrounds with cool cyan-blue accents evoke the cockpit of a crewed lunar mission.",
+  "author": "Alex Spataru",
+  "version": "0.0.1",
+  "license": "MIT",
+  "category": "Dark",
+  "screenshot": "screenshot.png",
+  "files": [
+    "info.json",
+    "artemis.json",
+    "code-editor/artemis.xml"
+  ]
+}
